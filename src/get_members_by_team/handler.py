@@ -1,6 +1,6 @@
-from src.common.services.lambda_ import Lambda, LambdaResponseCodes
-from src.common.models.member import Member
-from src.common.services.logger import get_logger
+from ..common.services.lambda_ import Lambda, LambdaResponseCodes
+from ..common.models.member import Member
+from ..common.services.logger import get_logger
 import boto3
 from boto3.dynamodb.conditions import Key
 

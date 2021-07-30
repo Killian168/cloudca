@@ -1,4 +1,4 @@
-org: killian168
+org: benny568
 app: cloudca
 service: cloudca
 
@@ -18,7 +18,8 @@ provider:
 functions:
   getMembersByTeam:
     name: getMembersByTeam
-    handler: src/get_members_by_team/wrap.handler
+    handler: get_members_by_team/handler.get_members_by_team_handler
+    module: src/get_members_by_team
     package:
       patterns:
         - src/get_members_by_team/**
@@ -26,8 +27,8 @@ functions:
         - src/__init__.py # needed to reference src as a package
 
 plugins:
-  - serverless-python-individually
+  - serverless-python-requirements
 
 custom:
-  pyIndividually:
-    wrap:getMembersByTeam: src/get_members_by_team/handler.get_members_by_team_handler # mapping to the real handler
+  pythonRequirements:
+    pythonBin: /usr/local/opt/python@3.8/bin/python3 # Installed using `brew install python@3.8`
