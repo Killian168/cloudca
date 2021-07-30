@@ -1,0 +1,33 @@
+org: killian168
+app: cloudca
+service: cloudca
+
+frameworkVersion: '2'
+
+package:
+  individually: True
+  patterns:
+    # Exclude everything first.
+    - '!**/*'
+
+provider:
+  name: aws
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+
+functions:
+  getMembersByTeam:
+    name: getMembersByTeam
+    handler: src/get_members_by_team/wrap.handler
+    package:
+      patterns:
+        - src/get_members_by_team/**
+        - src/common/**
+        - src/__init__.py # needed to reference src as a package
+
+plugins:
+  - serverless-python-individually
+
+custom:
+  pyIndividually:
+    wrap:getMembersByTeam: src/get_members_by_team/handler.get_members_by_team_handler # mapping to the real handler
