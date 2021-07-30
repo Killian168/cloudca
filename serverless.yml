@@ -26,6 +26,16 @@ functions:
         - src/common/**
         - src/__init__.py # needed to reference src as a package
 
+  getAllMembers:
+    name: getAllMembers
+    handler: get_all_members/handler.get_all_members
+    module: src/get_all_members
+    package:
+      patterns:
+        - src/get_all_members/**
+        - src/common/**
+        - src/__init__.py # needed to reference src as a package
+
 plugins:
   - serverless-python-requirements
 
