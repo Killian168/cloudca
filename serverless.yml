@@ -4,6 +4,9 @@ service: cloudca
 
 frameworkVersion: '2'
 
+######################################################################
+##          package lambdas into individual packages                ##
+######################################################################
 package:
   individually: True
   patterns:
@@ -42,3 +45,21 @@ plugins:
 custom:
   pythonRequirements:
     pythonBin: /usr/local/opt/python@3.8/bin/python3 # Installed using `brew install python@3.8` on MacOs
+
+######################################################################
+##                   AWS Cloudformation set up                      ##
+######################################################################
+
+# ToDo: Database design needs to be done. This should be changes to reflect that.
+resources: # CloudFormation template syntax from here on.
+  Resources:
+    membersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Members
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
