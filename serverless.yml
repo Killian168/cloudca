@@ -19,7 +19,7 @@ functions:
   getMembersByTeam:
     name: getMembersByTeam
     handler: get_members_by_team/handler.get_members_by_team_handler
-    module: src/get_members_by_team
+    module: src
     package:
       patterns:
         - src/get_members_by_team/**

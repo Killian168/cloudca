@@ -1,6 +1,14 @@
-from ..common.services.lambda_ import Lambda, LambdaResponseCodes
-from ..common.models.member import Member
-from ..common.services.logger import get_logger
+try:
+    # Used for local testing
+    from ..common.models.member import Member
+    from ..common.services.logger import get_logger
+    from ..common.services.lambda_ import Lambda, LambdaResponseCodes
+except ModuleNotFoundError:
+    # Used for running in Lambda
+    from common.models.member import Member
+    from common.services.logger import get_logger
+    from common.services.lambda_ import Lambda, LambdaResponseCodes
+
 import boto3
 from boto3.dynamodb.conditions import Key
 
