@@ -29,7 +29,7 @@ functions:
   getAllMembers:
     name: getAllMembers
     handler: get_all_members/handler.get_all_members
-    module: src/get_all_members
+    module: src
     package:
       patterns:
         - src/get_all_members/**
@@ -41,4 +41,4 @@ plugins:
 
 custom:
   pythonRequirements:
-    pythonBin: /usr/local/opt/python@3.8/bin/python3 # Installed using `brew install python@3.8`
+    pythonBin: /usr/local/opt/python@3.8/bin/python3 # Installed using `brew install python@3.8` on MacOs
