@@ -16,7 +16,7 @@ LOGGER = get_logger()
 
 
 # Entry point for getMembersByTeam lambda
-def get_members_by_team_handler(event, context):
+def get_members_by_team(event, context):
     # Sanitize input
     try:
         team_id = event["TeamId"]

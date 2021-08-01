@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from src.get_all_members.handler import get_all_members
-from src.get_members_by_team.handler import get_members_by_team_handler, MEMBERS_TABLE
+from src.get_members_by_team.handler import get_members_by_team, MEMBERS_TABLE
 from json import dumps
 from moto import mock_dynamodb2
 import boto3
