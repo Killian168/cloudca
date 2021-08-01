@@ -16,36 +16,27 @@ class TestHandlerBaseCase(TestCase):
 
 
 class TestGetAllMembersHandler(TestHandlerBaseCase):
-
     @mock_dynamodb2
     def test_should_return_200_and_members_list(self):
         # Set up
-        dynamodb_client = boto3.client('dynamodb')
+        dynamodb_client = boto3.client("dynamodb")
 
         # Set up dynamoDb Table
         dynamodb_client.create_table(
             TableName=MEMBERS_TABLE,
-            KeySchema=[{'AttributeName': 'id', 'KeyType': 'HASH'}],
-            AttributeDefinitions=[{'AttributeName': 'id', 'AttributeType': 'S'}]
+            KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
+            AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
         )
 
         # Put item in table
         dynamodb_client.put_item(
             TableName=MEMBERS_TABLE,
             Item={
-                'id': {
-                    'S': 'test-id'
-                },
-                'firstName': {
-                    'S': 'test-first-name'
-                },
-                'lastName': {
-                    'S': 'test-last-name'
-                },
-                'teamId': {
-                    'S': 'test_team_id'
-                }
-            }
+                "id": {"S": "test-id"},
+                "firstName": {"S": "test-first-name"},
+                "lastName": {"S": "test-last-name"},
+                "teamId": {"S": "test_team_id"},
+            },
         )
 
         # Call method
@@ -53,14 +44,18 @@ class TestGetAllMembersHandler(TestHandlerBaseCase):
 
         # Assert Behaviour
         expected_response = {
-            'statusCode': 200,
-            'body': {
-                'message': dumps([{
-                    "id": "test-id",
-                    "firstName": "test-first-name",
-                    "lastName": "test-last-name",
-                    "teamId": "test_team_id"
-                }])
-            }
+            "statusCode": 200,
+            "body": {
+                "message": dumps(
+                    [
+                        {
+                            "id": "test-id",
+                            "firstName": "test-first-name",
+                            "lastName": "test-last-name",
+                            "teamId": "test_team_id",
+                        }
+                    ]
+                )
+            },
         }
         self.assertEqual(response, expected_response)

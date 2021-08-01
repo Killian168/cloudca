@@ -3,7 +3,7 @@ from pythonjsonlogger import jsonlogger
 
 
 def get_logger():
-    logger = logging.getLogger('cloud-ca')
+    logger = logging.getLogger("cloud-ca")
     logger.setLevel(logging.DEBUG)
 
     stdout_handler = logging.StreamHandler()
