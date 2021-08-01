@@ -1,5 +1,5 @@
 from unittest import TestCase
-from src.get_members_by_team.handler import get_members_by_team_handler, MEMBERS_TABLE
+from src.get_members_by_team.handler import get_members_by_team, MEMBERS_TABLE
 from src.common.services.lambda_ import Lambda
 from json import dumps
 from moto import mock_dynamodb2
@@ -20,7 +20,7 @@ class TestGetMembersByTeamHandler(TestHandlerBaseCase):
         mock_event = {"notTeamId": "Test"}
 
         # Call method
-        response = get_members_by_team_handler(mock_event, None)
+        response = get_members_by_team(mock_event, None)
 
         # Assert behaviour
         self.assertEqual(response[Lambda.KEY_STATUS_CODE], 400)
@@ -55,7 +55,7 @@ class TestGetMembersByTeamHandler(TestHandlerBaseCase):
         )
 
         # Call method
-        response = get_members_by_team_handler(mock_event, None)
+        response = get_members_by_team(mock_event, None)
 
         # Assert Behaviour
         expected_response = {
