@@ -3,20 +3,35 @@ try:
     from ..common.models.member import Member
     from ..common.services.logger import get_logger
     from ..common.services.lambda_ import Lambda, LambdaResponseCodes
+    from ..common.constants import MEMBERS_TABLE
 except ImportError:
     # Used for running in Lambda
     from common.models.member import Member
     from common.services.logger import get_logger
     from common.services.lambda_ import Lambda, LambdaResponseCodes
+    from common.constants import MEMBERS_TABLE
 import boto3
 from boto3.dynamodb.conditions import Key
 
-MEMBERS_TABLE = "Members"
 LOGGER = get_logger()
 
 
 # Entry point for getMembersByTeam lambda
 def get_members_by_team(event, context):
+    """ Entry point for `get_members_by_team` AWS Lambda Function.
+
+    Parameters
+    ----------
+    event : dict
+        The input for an AWS Lambda.
+    context : dict
+        The context dictionary for an AWS Lambda
+
+    Returns
+    -------
+    LambdaResponse : dict
+        Returns a list of members who are members of the inputted team.
+    """
     # Sanitize input
     try:
         team_id = event["TeamId"]
@@ -45,5 +60,5 @@ def get_members_by_team(event, context):
 
     # Construct response and send back
     return Lambda.format_response(
-        status_code=LambdaResponseCodes.OK, response_message=members_list
+        status_code=LambdaResponseCodes.OK, response_message=members_list.__str__()
     )

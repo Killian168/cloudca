@@ -54,7 +54,7 @@ class TestGetAllMembersHandler(TestHandlerBaseCase):
                             "lastName": "test-last-name",
                             "teamId": "test_team_id",
                         }
-                    ]
+                    ].__str__()
                 )
             },
         }

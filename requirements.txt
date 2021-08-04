@@ -1,2 +1,5 @@
 virtualenv==16.7.10
 black==21.7b0
+boto3==1.17.112
+python-json-logger==2.0.2
+pydantic==1.8.2

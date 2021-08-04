@@ -3,20 +3,36 @@ try:
     from ..common.models.member import Member
     from ..common.services.logger import get_logger
     from ..common.services.lambda_ import Lambda, LambdaResponseCodes
+    from ..common.constants import MEMBERS_TABLE
 except ImportError:
     # Used for running in Lambda
     from common.models.member import Member
     from common.services.logger import get_logger
     from common.services.lambda_ import Lambda, LambdaResponseCodes
+    from common.constants import MEMBERS_TABLE
 import boto3
 
-MEMBERS_TABLE = "Members"
 LOGGER = get_logger()
 
 
 # Entry point for getMembersByTeam lambda
 def get_all_members(event, context):
-    # Scan DynamoDb members table for members where teamId==team_id (var `team_id` instantiated above)
+    """ Entry point for `get_all_members` AWS Lambda Function.
+
+    Parameters
+    ----------
+    event : dict
+        The input for an AWS Lambda.
+    context : dict
+        The context dictionary for an AWS Lambda
+
+    Returns
+    -------
+    LambdaResponse : dict
+        Returns a list of all club members.
+    """
+
+    # Get all members from members table
     dynamodb_resource = boto3.resource("dynamodb")
     table = dynamodb_resource.Table(MEMBERS_TABLE)
     response = table.scan()
@@ -32,5 +48,5 @@ def get_all_members(event, context):
 
     # Construct response and send back
     return Lambda.format_response(
-        status_code=LambdaResponseCodes.OK, response_message=members_list
+        status_code=LambdaResponseCodes.OK, response_message=members_list.__str__()
     )
