@@ -8,3 +8,6 @@ tests:
 
 setup:
 	pip3 install -r requirements.txt
+
+pre-commit:
+	pre-commit run -a
