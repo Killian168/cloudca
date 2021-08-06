@@ -20,8 +20,6 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      env:
-        AWS_DEFAULT_REGION: "mock-region"
       run: |
         python -m pip install --upgrade pip
         python -m pip install pre-commit
@@ -31,5 +29,7 @@ jobs:
         pre-commit install
         pre-commit run -a
     - name: Run unit tests
+      env:
+        AWS_DEFAULT_REGION: "mock-region"
       run: |
         python3 -m unittest discover ./test/
