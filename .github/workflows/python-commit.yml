@@ -30,6 +30,6 @@ jobs:
         pre-commit run -a
     - name: Run unit tests
       env:
-        AWS_DEFAULT_REGION: "mock-region"
+        AWS_DEFAULT_REGION: "us-east-1"
       run: |
         python3 -m unittest discover ./test/
