@@ -49,17 +49,3 @@ custom:
 ######################################################################
 ##                   AWS Cloudformation set up                      ##
 ######################################################################
-
-# ToDo: Database design needs to be done. This should be changes to reflect that.
-resources: # CloudFormation template syntax from here on.
-  Resources:
-    membersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: Members
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
