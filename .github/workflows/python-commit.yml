@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.6', '3.7', '3.8']
+        python-version: ['3.8'] # Using python 3.8 for serverless framework
 
     steps:
     - uses: actions/checkout@v2
@@ -20,6 +20,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
+      env:
+        AWS_DEFAULT_REGION: "mock-region"
       run: |
         python -m pip install --upgrade pip
         python -m pip install pre-commit
