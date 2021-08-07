@@ -44,7 +44,7 @@ def get_members_by_team(event, context):
             status_code=LambdaResponseCodes.BAD_REQUEST, error_message=error_message
         )
 
-    # Scan DynamoDb members table for members where teamId==team_id (var `team_id` instantiated above)
+    # Scan DynamoDb members table for members
     dynamodb_resource = boto3.resource("dynamodb")
     table = dynamodb_resource.Table(MEMBERS_TABLE)
     response = table.scan(FilterExpression=Key("teamId").eq(team_id))
@@ -53,7 +53,8 @@ def get_members_by_team(event, context):
     # Create Member objects for each one of the members returned
     members_list = []
     for obj in response["Items"]:
-        # Unpack obj key, value pairs into Member parameters for example if obj = {"key": "val", "key1": "val1" }
+        # Unpack obj key, value pairs into Member parameters for example
+        # if obj = {"key": "val", "key1": "val1" }
         # the Member(**obj) would produce: Member(key=value, key1=val1)
         # Once the Member object is instantiated, append to members_list
         members_list.append(Member(**obj).dict())

@@ -1,9 +1,11 @@
-from unittest import TestCase
-from src.get_members_by_team.handler import get_members_by_team, MEMBERS_TABLE
-from src.common.services.lambda_ import Lambda
 from json import dumps
-from moto import mock_dynamodb2
+from unittest import TestCase
+
 import boto3
+from moto import mock_dynamodb2
+
+from src.common.services.lambda_ import Lambda
+from src.get_members_by_team.handler import MEMBERS_TABLE, get_members_by_team
 
 
 class TestHandlerBaseCase(TestCase):
