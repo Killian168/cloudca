@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from src.get_all_members.handler import get_all_members
-from src.get_members_by_team.handler import get_members_by_team, MEMBERS_TABLE
+from src.get_members_by_team.handler import MEMBERS_TABLE
 from json import dumps
 from moto import mock_dynamodb2
 import boto3
@@ -32,15 +32,21 @@ class TestGetAllMembersHandler(TestHandlerBaseCase):
         dynamodb_client.put_item(
             TableName=MEMBERS_TABLE,
             Item={
-                "id": {"S": "test-id"},
-                "firstName": {"S": "test-first-name"},
-                "lastName": {"S": "test-last-name"},
-                "teamId": {"S": "test_team_id"},
+                "address": {"S": "test-id"},
+                "birthdate": {"S": "test-first-name"},
+                "email": {"S": "test-last-name"},
+                "family_name": {"S": "test_team_id"},
+                "gender": {"S": "test_team_id"},
+                "given_name": {"S": "test_team_id"},
+                "locale": {"S": "test_team_id"},
+                "role": {"S": "test_team_id"},
+                "responsibilities": {"S": "test_team_id"},
             },
         )
 
         # Call method
         response = get_all_members(None, None)
+        print(f'response = {response}')
 
         # Assert Behaviour
         expected_response = {
