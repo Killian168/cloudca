@@ -131,3 +131,7 @@ dmypy.json
 .serverless
 /src/get_members_by_team/wrap.py
 /src/get_members_by_team/lib/
+
+# IDE stuff
+.idea/
+.DS_Store
