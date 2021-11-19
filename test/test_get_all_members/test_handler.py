@@ -1,7 +1,3 @@
-from unittest import TestCase
-
-from src.get_all_members.handler import get_all_members
-from src.get_members_by_team.handler import get_members_by_team, MEMBERS_TABLE
 from json import dumps
 from unittest import TestCase
 

@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 
+
 class Manager(BaseModel):
     """ Represents what a manager is in the club.
         Holds custom attributes that are related to a Manger role in the Club.
