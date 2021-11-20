@@ -22,11 +22,11 @@ class Lambda:
         if error_message:
             return {
                 Lambda.KEY_STATUS_CODE: status_code.value,
-                Lambda.KEY_BODY: {"errorMessage": dumps(error_message)},
+                Lambda.KEY_BODY: {"errorMessage": error_message},
             }
 
         else:
             return {
                 Lambda.KEY_STATUS_CODE: status_code.value,
-                Lambda.KEY_BODY: {"message": dumps(response_message)},
+                Lambda.KEY_BODY: {"message": response_message},
             }

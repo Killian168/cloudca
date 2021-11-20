@@ -20,8 +20,11 @@ class Member(BaseModel):
         This class initializes the standard attributes that a Member should have.
     """
 
+    # Cognito member uuid
+    id: str
+
     # Standard member attributes provided by cognito
-    standard_details: CognitoMember
+    details: CognitoMember
 
     # The following are the available roles of the club.
     manager: Optional[Manager]
