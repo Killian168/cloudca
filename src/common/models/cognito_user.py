@@ -1,10 +1,11 @@
-from pydantic import BaseModel
 from typing import Optional
+
+from pydantic import BaseModel
 
 
 class CognitoMember(BaseModel):
-    """ Standard class of a Member stored in AWS Cognito.
-        This class initializes the standard attributes that a Member should have.
+    """Standard class of a Member stored in AWS Cognito.
+    This class initializes the standard attributes that a Member should have.
     """
 
     # Standard attributes given to every member by Cognito.

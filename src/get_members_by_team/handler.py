@@ -10,7 +10,7 @@ except ImportError:
     from common.services.lambda_ import Lambda, LambdaResponseCodes
 
 import boto3
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Attr, Or
 
 MEMBERS_TABLE = "Members"
 LOGGER = get_logger()
@@ -33,7 +33,13 @@ def get_members_by_team(event, context):
     # Scan DynamoDb members table for members
     dynamodb_resource = boto3.resource("dynamodb")
     table = dynamodb_resource.Table(MEMBERS_TABLE)
-    response = table.scan(FilterExpression=Key("teamId").eq(team_id))
+
+    # Only managers and players have teams associated to them
+    response = table.scan(
+        FilterExpression=Or(
+            Attr("manager.teams").contains(team_id), Attr("player.teams").contains(team_id)
+        )
+    )
     LOGGER.debug(f"Table scan responded with: {response}")
 
     # Create Member objects for each one of the members returned

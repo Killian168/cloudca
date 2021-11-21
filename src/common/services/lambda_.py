@@ -1,5 +1,4 @@
 from enum import Enum
-from json import dumps
 
 
 class LambdaResponseCodes(Enum):

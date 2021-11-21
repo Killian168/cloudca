@@ -1,11 +1,13 @@
-from pydantic import BaseModel
 from typing import List
+
+from pydantic import BaseModel
 
 
 class Player(BaseModel):
-    """ Represents what a player is in the club.
-        Holds custom attributes that are related to a Player role in the Club.
+    """Represents what a player is in the club.
+    Holds custom attributes that are related to a Player role in the Club.
     """
+
     positions: List[str] = []
     training_times: List[str] = []
     match_times: List[str] = []
