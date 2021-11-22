@@ -9,9 +9,6 @@ class Player(BaseModel):
     """
 
     positions: List[str] = []
-    training_times: List[str] = []
-    match_times: List[str] = []
-    teams: List[str] = []
     season_appearances: int = 0
     season_assists: int = 0
     season_goals: int = 0

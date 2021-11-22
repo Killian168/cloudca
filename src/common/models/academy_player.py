@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from ..models.parent import Parent
+from ..models.cognito_user import CognitoMember
 
 
 class AcademyPlayer(BaseModel):
@@ -15,4 +15,4 @@ class AcademyPlayer(BaseModel):
     diabetes: str
     medication: str
     notes: str
-    parents: List[Parent]
+    guardians: List[CognitoMember]
