@@ -49,3 +49,28 @@ custom:
 ######################################################################
 ##                   AWS Cloudformation set up                      ##
 ######################################################################
+resources:
+  Resources:
+    membersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Members
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+    teamTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Teams
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH

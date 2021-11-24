@@ -1,5 +1,6 @@
 try:
     # Used for local testing
+    from ..common.constants import MEMBERS_TABLE_NAME
     from ..common.enums.api_response_codes import APIResponseCodes
     from ..common.models.member import Member
     from ..common.services.lambda_ import Lambda
@@ -10,10 +11,10 @@ except ImportError:
     from common.services.logger import get_logger
     from common.services.lambda_ import Lambda
     from common.enums.api_response_codes import APIResponseCodes
+    from common.constants import MEMBERS_TABLE_NAME
 
 import boto3
 
-MEMBERS_TABLE = "Members"
 LOGGER = get_logger()
 
 
@@ -22,7 +23,7 @@ def get_all_members(event, context):
     # Scan DynamoDb members table for members where teamId==team_id
     # (var `team_id` instantiated above)
     dynamodb_resource = boto3.resource("dynamodb")
-    table = dynamodb_resource.Table(MEMBERS_TABLE)
+    table = dynamodb_resource.Table(MEMBERS_TABLE_NAME)
     response = table.scan()
     LOGGER.debug(f"Table scan responded with: {response}")
 

@@ -5,8 +5,9 @@ from unittest import TestCase
 import boto3
 from moto import mock_dynamodb2
 
+from src.common.constants import MEMBERS_TABLE_NAME, TEAM_TABLE_NAME
 from src.common.services.lambda_ import Lambda
-from src.get_members_by_team.handler import MEMBERS_TABLE, TEAM_TABLE, get_members_by_team
+from src.get_members_by_team.handler import get_members_by_team
 
 
 class TestHandlerBaseCase(TestCase):
@@ -43,29 +44,29 @@ class TestGetMembersByTeamHandler(TestHandlerBaseCase):
 
         # Set up dynamoDb Tables
         dynamodb_client.create_table(
-            TableName=MEMBERS_TABLE,
+            TableName=MEMBERS_TABLE_NAME,
             KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
             AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
         )
 
         dynamodb_client.create_table(
-            TableName=TEAM_TABLE,
+            TableName=TEAM_TABLE_NAME,
             KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
             AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
         )
 
         dynamodb_client.put_item(
-            TableName=MEMBERS_TABLE,
+            TableName=MEMBERS_TABLE_NAME,
             Item=DynamoDbFixtures.get_manager_dynamo_json(manager_id),
         )
 
         dynamodb_client.put_item(
-            TableName=MEMBERS_TABLE,
+            TableName=MEMBERS_TABLE_NAME,
             Item=DynamoDbFixtures.get_player_dynamo_json(player_id),
         )
 
         dynamodb_client.put_item(
-            TableName=TEAM_TABLE,
+            TableName=TEAM_TABLE_NAME,
             Item=DynamoDbFixtures.get_team_dynamodb_json(
                 team_id=team_id, managers=[manager_id], players=[player_id]
             ),
