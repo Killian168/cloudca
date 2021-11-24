@@ -5,8 +5,8 @@ from unittest import TestCase
 import boto3
 from moto import mock_dynamodb2
 
+from src.common.constants import MEMBERS_TABLE_NAME
 from src.get_all_members.handler import get_all_members
-from src.get_members_by_team.handler import MEMBERS_TABLE
 
 
 class TestHandlerBaseCase(TestCase):
@@ -24,12 +24,12 @@ class TestGetAllMembersHandler(TestHandlerBaseCase):
         member_id = "test_member_id"
         dynamodb_client = boto3.client("dynamodb")
         dynamodb_client.create_table(
-            TableName=MEMBERS_TABLE,
+            TableName=MEMBERS_TABLE_NAME,
             KeySchema=[{"AttributeName": "id", "KeyType": "HASH"}],
             AttributeDefinitions=[{"AttributeName": "id", "AttributeType": "S"}],
         )
         dynamodb_client.put_item(
-            TableName=MEMBERS_TABLE,
+            TableName=MEMBERS_TABLE_NAME,
             Item=DynamoDbFixtures.get_member_no_role_dynamo_json(member_id),
         )
 
