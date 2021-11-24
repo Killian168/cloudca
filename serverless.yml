@@ -2,7 +2,7 @@ org: benny568
 app: cloudca
 service: cloudca
 
-frameworkVersion: '2'
+frameworkVersion: '2.66.2'
 
 ######################################################################
 ##          package lambdas into individual packages                ##
@@ -21,39 +21,61 @@ provider:
 functions:
   getMembersByTeam:
     name: getMembersByTeam
-    handler: get_members_by_team/handler.get_members_by_team
-    module: src
+    handler: src/get_members_by_team/handler.get_members_by_team
     package:
       patterns:
         - src/get_members_by_team/**
         - src/common/**
-        - src/__init__.py # needed to reference src as a package
+        - src/__init__.py
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:Scan
+        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
 
   getAllMembers:
     name: getAllMembers
-    handler: get_all_members/handler.get_all_members
-    module: src
+    handler: src/get_all_members/handler.get_all_members
     package:
       patterns:
         - src/get_all_members/**
         - src/common/**
-        - src/__init__.py # needed to reference src as a package
+        - src/__init__.py
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:Scan
+        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
 
   getAllTeams:
     name: getAllTeams
-    handler: get_all_teams/handler.get_all_teams
-    module: src
+    handler: src/get_all_teams/handler.get_all_teams
     package:
       patterns:
         - src/get_all_teams/**
         - src/common/**
-        - src/__init__.py # needed to reference src as a package
+        - src/__init__.py
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:Scan
+        Resource:
+          - "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
+          - "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
 
 plugins:
   - serverless-python-requirements
+  - serverless-iam-roles-per-function
 
 custom:
   pythonRequirements:
+    noDeploy:
+      - pytest
+      - virtualenv
+      - black
+      - pre-commit
+      - moto
+    slim: true
     pythonBin: /usr/local/opt/python@3.8/bin/python3 # Installed using `brew install python@3.8` on MacOs
 
 ######################################################################
