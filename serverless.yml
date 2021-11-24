@@ -39,6 +39,16 @@ functions:
         - src/common/**
         - src/__init__.py # needed to reference src as a package
 
+  getAllTeams:
+    name: getAllTeams
+    handler: get_all_teams/handler.get_all_teams
+    module: src
+    package:
+      patterns:
+        - src/get_all_teams/**
+        - src/common/**
+        - src/__init__.py # needed to reference src as a package
+
 plugins:
   - serverless-python-requirements
 
