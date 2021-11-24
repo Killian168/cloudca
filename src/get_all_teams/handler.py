@@ -7,7 +7,7 @@ try:
     from ..common.services.logger import get_logger
 except ImportError:
     # Used for running in Lambda
-    from common.models.member import Member
+    from common.models.member import Team
     from common.services.logger import get_logger
     from common.services.lambda_ import Lambda
     from common.enums.api_response_codes import APIResponseCodes

@@ -106,19 +106,19 @@ class Fixtures:
     @staticmethod
     def get_team_json(team_id):
         return {
-            'fixtures': [
+            "fixtures": [
                 {
-                    'away_team': 'killians-amazing-away-team',
-                    'competition': 'killians-amazing-competition',
-                    'home_team': 'killians-amazing-home-team',
-                    'kick_off_time': 'killians-amazing-kick-off-time',
-                    'location': 'killians-amazing-location',
-                    'meeting_time': 'killians-amazing-meeting-time'
+                    "away_team": "killians-amazing-away-team",
+                    "competition": "killians-amazing-competition",
+                    "home_team": "killians-amazing-home-team",
+                    "kick_off_time": "killians-amazing-kick-off-time",
+                    "location": "killians-amazing-location",
+                    "meeting_time": "killians-amazing-meeting-time",
                 }
             ],
-            'id': team_id,
-            'managers': [],
-            'name': 'killians-amazing-team-name',
-            'players': [],
-            'training_times': ['killians-amazing-training_times']
+            "id": team_id,
+            "managers": [],
+            "name": "killians-amazing-team-name",
+            "players": [],
+            "training_times": ["killians-amazing-training_times"],
         }
