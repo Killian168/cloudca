@@ -21,9 +21,7 @@ from boto3.dynamodb.conditions import Key
 LOGGER = get_logger()
 
 
-# Entry point for getMembersByTeam lambda
 def get_members_by_team(event, context):
-    # Sanitize input
     try:
         team_id = event["TeamId"]
         LOGGER.debug(f"TeamId value passed in event is: {team_id}")
