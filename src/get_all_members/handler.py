@@ -1,13 +1,15 @@
 try:
     # Used for local testing
+    from ..common.enums.api_response_codes import APIResponseCodes
     from ..common.models.member import Member
-    from ..common.services.lambda_ import Lambda, LambdaResponseCodes
+    from ..common.services.lambda_ import Lambda
     from ..common.services.logger import get_logger
 except ImportError:
     # Used for running in Lambda
     from common.models.member import Member
     from common.services.logger import get_logger
-    from common.services.lambda_ import Lambda, LambdaResponseCodes
+    from common.services.lambda_ import Lambda
+    from common.enums.api_response_codes import APIResponseCodes
 
 import boto3
 
@@ -34,4 +36,4 @@ def get_all_members(event, context):
         members_list.append(Member(**obj).dict())
 
     # Construct response and send back
-    return Lambda.format_response(status_code=LambdaResponseCodes.OK, response_message=members_list)
+    return Lambda.format_response(status_code=APIResponseCodes.OK, response_message=members_list)
