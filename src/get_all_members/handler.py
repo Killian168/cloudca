@@ -1,19 +1,10 @@
-try:
-    # Used for local testing
-    from ..common.constants import MEMBERS_TABLE_NAME
-    from ..common.enums.api_response_codes import APIResponseCodes
-    from ..common.models.member import Member
-    from ..common.services.lambda_ import Lambda
-    from ..common.services.logger import get_logger
-except ImportError:
-    # Used for running in Lambda
-    from common.models.member import Member
-    from common.services.logger import get_logger
-    from common.services.lambda_ import Lambda
-    from common.enums.api_response_codes import APIResponseCodes
-    from common.constants import MEMBERS_TABLE_NAME
-
 import boto3
+
+from src.common.constants import MEMBERS_TABLE_NAME
+from src.common.enums.api_response_codes import APIResponseCodes
+from src.common.models.member import Member
+from src.common.services.lambda_ import Lambda
+from src.common.services.logger import get_logger
 
 LOGGER = get_logger()
 
