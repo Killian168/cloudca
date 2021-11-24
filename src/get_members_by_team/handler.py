@@ -1,3 +1,5 @@
+from boto3.dynamodb.conditions import Key
+
 from src.common.constants import MEMBERS_TABLE_NAME, TEAM_TABLE_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
 from src.common.models.member import Member
@@ -5,8 +7,6 @@ from src.common.models.team import Team
 from src.common.services.dynamodb import DynamoDB
 from src.common.services.lambda_ import Lambda
 from src.common.services.logger import get_logger
-
-from boto3.dynamodb.conditions import Key
 
 LOGGER = get_logger()
 

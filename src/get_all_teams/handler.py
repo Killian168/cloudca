@@ -1,10 +1,10 @@
+import boto3
+
 from src.common.constants import TEAM_TABLE_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
 from src.common.models.team import Team
 from src.common.services.lambda_ import Lambda
 from src.common.services.logger import get_logger
-
-import boto3
 
 LOGGER = get_logger()
 
