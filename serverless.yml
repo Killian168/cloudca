@@ -5,7 +5,7 @@ service: cloudca
 frameworkVersion: '2.66.2'
 
 ######################################################################
-##          package lambdas into individual packages                ##
+##          Package lambdas into individual packages                ##
 ######################################################################
 package:
   individually: True
@@ -63,6 +63,26 @@ functions:
           - "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
           - "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
 
+  getNewsStories:
+    name: getNewsStories
+    handler: src/get_news_stories/handler.get_news_stories
+    package:
+      patterns:
+        - src/get_news_stories/**
+        - src/common/**
+        - src/__init__.py
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:Scan
+        Resource:
+          - "arn:aws:dynamodb:${self:provider.region}:*:table/News-Stories"
+      - Effect: "Allow"
+        Action:
+          - s3:GetObject
+        Resource:
+          - "arn:aws:s3:::cloudca/*"
+
 plugins:
   - serverless-python-requirements
   - serverless-iam-roles-per-function
@@ -83,6 +103,9 @@ custom:
 ######################################################################
 resources:
   Resources:
+  ######################################################################
+  ##                         DynamoDb Tables                          ##
+  ######################################################################
     membersTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -106,3 +129,24 @@ resources:
         KeySchema:
           - AttributeName: id
             KeyType: HASH
+
+    newsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: News-Stories
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+
+  ######################################################################
+  ##                           S3 Buckets                             ##
+  ######################################################################
+    cloudcaBucket:
+      Type: AWS::S3::Bucket
+      DeletionPolicy: Retain
+      Properties:
+        BucketName: cloudca
