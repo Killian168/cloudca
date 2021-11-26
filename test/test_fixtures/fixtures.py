@@ -1,7 +1,11 @@
+from base64 import b64encode
+from pathlib import Path
 from uuid import uuid4
 
 
 class Fixtures:
+    test_root = Path(__file__).parents[1]
+
     @staticmethod
     def get_member_no_role_json(member_id=None):
         if member_id is None:
@@ -122,3 +126,23 @@ class Fixtures:
             "players": [],
             "training_times": ["killians-amazing-training_times"],
         }
+
+    @staticmethod
+    def get_base64_sample_pic():
+        image_path = Fixtures.test_root / "resources" / "test_image.jpeg"
+        image = image_path.read_bytes()
+        return b64encode(image)
+
+    @staticmethod
+    def get_news_story_json(story_id):
+        return {
+            "id": story_id,
+            "category": ["killians-cool-category"],
+            "title": "killians-terrible-title",
+            "description": "killians-deceptive-description",
+            "thumbnail": Fixtures.get_base64_sample_pic().decode("utf-8"),
+        }
+
+    @staticmethod
+    def get_s3_object_json(bucket, key):
+        return {"bucket": bucket, "key": key}

@@ -102,3 +102,13 @@ class DynamoDbFixtures:
             "training_times": {"L": [{"S": "killians-amazing-training_times"}]},
             "fixtures": {"L": fixtures},
         }
+
+    @staticmethod
+    def get_news_story_dynamodb_json(story_id, key):
+        return {
+            "id": {"S": story_id},
+            "category": {"L": [{"S": "killians-cool-category"}]},
+            "title": {"S": "killians-terrible-title"},
+            "description": {"S": "killians-deceptive-description"},
+            "thumbnail_key": {"S": key},
+        }

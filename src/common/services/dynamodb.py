@@ -19,10 +19,16 @@ class DynamoDB:
         self.logger = logger
         self.dynamodb_resource = dynamodb_resource
 
-    def scan_table(self, table_name, filter_expression):
+    def scan_table(self, table_name, filter_expression=None):
         teams_table = self.dynamodb_resource.Table(table_name)
-        response = teams_table.scan(FilterExpression=filter_expression)
+
+        if filter_expression:
+            response = teams_table.scan(FilterExpression=filter_expression)
+        else:
+            response = teams_table.scan()
+
         self.logger.debug(f"{table_name} Table scan responded with: {response}")
+
         if response["Items"]:
             return response["Items"]
         else:
