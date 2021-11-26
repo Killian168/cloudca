@@ -34,6 +34,7 @@ class DynamoDB:
         else:
             raise ScanningError(table_name)
 
+    # Note: This might be a good candidate for numba
     @staticmethod
     def create_or_filter_expression(conditions):
         if len(conditions) == 1 or len(conditions) == 2:

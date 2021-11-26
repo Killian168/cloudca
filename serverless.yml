@@ -83,6 +83,20 @@ functions:
         Resource:
           - "arn:aws:s3:::cloudca/*"
 
+  getTeam:
+    name: getTeam
+    handler: src/get_team/handler.get_team
+    package:
+      patterns:
+        - src/get_team/**
+        - src/common/**
+        - src/__init__.py
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:Scan
+        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
+
 plugins:
   - serverless-python-requirements
   - serverless-iam-roles-per-function
