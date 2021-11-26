@@ -6,8 +6,8 @@ import boto3
 from moto import mock_dynamodb2
 
 from src.common.constants import TEAM_TABLE_NAME
-from src.get_team.handler import get_team
 from src.common.services.lambda_ import Lambda
+from src.get_team.handler import get_team
 
 
 class TestHandlerBaseCase(TestCase):

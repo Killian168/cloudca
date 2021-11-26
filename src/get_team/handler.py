@@ -1,9 +1,11 @@
+from boto3.dynamodb.conditions import Key
+
 from src.common.constants import TEAM_TABLE_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
+from src.common.services.dynamodb import DynamoDB
 from src.common.services.lambda_ import Lambda
 from src.common.services.logger import get_logger
-from boto3.dynamodb.conditions import Key
-from src.common.services.dynamodb import DynamoDB
+
 LOGGER = get_logger()
 
 
@@ -19,5 +21,7 @@ def get_team(event, context):
         )
 
     dynamo = DynamoDB()
-    response = dynamo.scan_table(table_name=TEAM_TABLE_NAME, filter_expression=Key("id").eq(team_id))
+    response = dynamo.scan_table(
+        table_name=TEAM_TABLE_NAME, filter_expression=Key("id").eq(team_id)
+    )
     return Lambda.format_response(status_code=APIResponseCodes.OK, response_message=response)
