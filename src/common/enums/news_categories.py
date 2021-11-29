@@ -3,8 +3,8 @@ from enum import Enum, unique
 
 @unique
 class NewsCategories(Enum):
-    """Valid categories to list a news item under
-    """
+    """Valid categories to list a news item under"""
+
     all = "all"
     academy = "academy"
     general = "general"

@@ -1,13 +1,13 @@
 import boto3
+from boto3.dynamodb.conditions import Attr
 
 from src.common.constants import NEWS_STORIES_TABLE_NAME, S3_BUCKET_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
+from src.common.enums.news_categories import NewsCategories
 from src.common.models.news_story import NewsStory
 from src.common.services.dynamodb import DynamoDB
 from src.common.services.lambda_ import Lambda
 from src.common.services.logger import get_logger
-from src.common.enums.news_categories import NewsCategories
-from boto3.dynamodb.conditions import Attr
 
 LOGGER = get_logger()
 
@@ -28,8 +28,10 @@ def get_news_stories(event, context):
     if category is NewsCategories.all:
         response = dynamo.scan_table(table_name=NEWS_STORIES_TABLE_NAME)
     else:
-        response = dynamo.scan_table(table_name=NEWS_STORIES_TABLE_NAME,
-                                     filter_expression=Attr("category").contains(category))
+        response = dynamo.scan_table(
+            table_name=NEWS_STORIES_TABLE_NAME,
+            filter_expression=Attr("category").contains(category),
+        )
 
     news_story_objs = [NewsStory(**obj) for obj in response]
 
