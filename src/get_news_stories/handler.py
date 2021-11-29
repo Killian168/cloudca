@@ -25,7 +25,7 @@ def get_news_stories(event, context):
 
     dynamo = DynamoDB(logger=LOGGER)
 
-    if category is NewsCategories.all:
+    if category is NewsCategories.all.value:
         response = dynamo.scan_table(table_name=NEWS_STORIES_TABLE_NAME)
     else:
         response = dynamo.scan_table(
