@@ -49,11 +49,21 @@ class TestGetMembersByTeamHandler(TestHandlerBaseCase):
         )
 
         # Call method
-        response = get_news_stories(None, None)
+        response = get_news_stories({"category": "all"}, None)
 
         # Assert Behaviour
         expected_response = {
             "statusCode": 200,
             "body": {"message": [Fixtures.get_news_story_json(story_id)]},
+        }
+        self.assertEqual(response, expected_response)
+
+    def test_should_return_400_and_error_message_on_bad_request(self):
+        response = get_news_stories({}, None)
+
+        # Assert Behaviour
+        expected_response = {
+            "statusCode": 400,
+            "body": {"errorMessage": "Event processed contains invalid category"},
         }
         self.assertEqual(response, expected_response)
