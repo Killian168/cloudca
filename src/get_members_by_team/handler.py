@@ -16,7 +16,6 @@ def get_members_by_team(event, context):
         team_id = event["TeamId"]
         LOGGER.debug(f"TeamId value passed in event is: {team_id}")
     except KeyError:
-        # Log error and return error response
         error_message = "Event processed does not have key `TeamId`."
         LOGGER.error(error_message)
         return Lambda.format_response(
