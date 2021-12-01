@@ -4,9 +4,6 @@ service: cloudca
 
 frameworkVersion: '2.66.2'
 
-######################################################################
-##          Package lambdas into individual packages                ##
-######################################################################
 package:
   individually: True
   patterns:
@@ -19,103 +16,11 @@ provider:
   lambdaHashingVersion: 20201221
 
 functions:
-  getMembersByTeam:
-    name: getMembersByTeam
-    handler: src/get_members_by_team/handler.get_members_by_team
-    package:
-      patterns:
-        - src/get_members_by_team/**
-        - src/common/**
-        - src/__init__.py
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - dynamodb:Scan
-        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
-    events:
-      - http:
-          path: member/getMembersByTeam
-          method: get
-
-  getAllMembers:
-    name: getAllMembers
-    handler: src/get_all_members/handler.get_all_members
-    package:
-      patterns:
-        - src/get_all_members/**
-        - src/common/**
-        - src/__init__.py
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - dynamodb:Scan
-        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
-    events:
-      - http:
-          path: member/getAllMembers
-          method: get
-
-  getAllTeams:
-    name: getAllTeams
-    handler: src/get_all_teams/handler.get_all_teams
-    package:
-      patterns:
-        - src/get_all_teams/**
-        - src/common/**
-        - src/__init__.py
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - dynamodb:Scan
-        Resource:
-          - "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
-          - "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
-    events:
-      - http:
-          path: team/getAllTeams
-          method: get
-
-  getTeam:
-    name: getTeam
-    handler: src/get_team/handler.get_team
-    package:
-      patterns:
-        - src/get_team/**
-        - src/common/**
-        - src/__init__.py
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - dynamodb:Scan
-        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
-    events:
-      - http:
-          path: team/getTeam
-          method: get
-
-  getNewsStories:
-    name: getNewsStories
-    handler: src/get_news_stories/handler.get_news_stories
-    package:
-      patterns:
-        - src/get_news_stories/**
-        - src/common/**
-        - src/__init__.py
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - dynamodb:Scan
-        Resource:
-          - "arn:aws:dynamodb:${self:provider.region}:*:table/News-Stories"
-      - Effect: "Allow"
-        Action:
-          - s3:GetObject
-        Resource:
-          - "arn:aws:s3:::cloudca/*"
-    events:
-      - http:
-          path: news/getNewsStories
-          method: get
+  - ${file(./src/get_members_by_team/function.yml)}
+  - ${file(./src/get_all_members/function.yml)}
+  - ${file(./src/get_all_teams/function.yml)}
+  - ${file(./src/get_team/function.yml)}
+  - ${file(./src/get_news_stories/function.yml)}
 
 plugins:
   - serverless-python-requirements
@@ -132,55 +37,7 @@ custom:
     slim: true
     pythonBin: /usr/local/opt/python@3.8/bin/python3 # Installed using `brew install python@3.8` on MacOs
 
-######################################################################
-##                   AWS Cloudformation set up                      ##
-######################################################################
 resources:
   Resources:
-  ######################################################################
-  ##                         DynamoDb Tables                          ##
-  ######################################################################
-    membersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: Members
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-
-    teamTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: Teams
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-
-    newsTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: News-Stories
-        BillingMode: PAY_PER_REQUEST
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-
-  ######################################################################
-  ##                           S3 Buckets                             ##
-  ######################################################################
-    cloudcaBucket:
-      Type: AWS::S3::Bucket
-      DeletionPolicy: Retain
-      Properties:
-        BucketName: cloudca
+    - ${file(./src/cloudformation/dynamodb-tables.yml)}
+    - ${file(./src/cloudformation/s3-buckets.yml)}
