@@ -1,0 +1,17 @@
+getMembersByTeam:
+  name: getMembersByTeam
+  handler: src/get_members_by_team/handler.get_members_by_team
+  package:
+    patterns:
+      - src/get_members_by_team/**
+      - src/common/**
+      - src/__init__.py
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:Scan
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
+  events:
+    - http:
+        path: member/getMembersByTeam
+        method: get
