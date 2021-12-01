@@ -3,6 +3,7 @@ from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
 
 from src.common.constants import TEAM_TABLE_NAME
+from src.common.enums.api_response_codes import APIResponseCodes
 from src.common.services.lambda_ import Lambda
 from src.get_team.handler import get_team
 
@@ -20,11 +21,11 @@ class TestGetAllTeamsHandler(BaseTestCase):
         response = get_team(mock_event, None)
 
         # Assert behaviour
-        self.assertEqual(response[Lambda.KEY_STATUS_CODE], 400)
-        self.assertEqual(
-            response[Lambda.KEY_BODY],
-            {"errorMessage": "Event processed does not have key `TeamId`."},
+        expected_response = Lambda.format_response(
+            status_code=APIResponseCodes.BAD_REQUEST,
+            error_message="Event processed does not have key `TeamId`.",
         )
+        self.assertEqual(expected_response, response)
 
     def test_should_return_200_and_teams_list(self):
         # Set up
@@ -40,8 +41,7 @@ class TestGetAllTeamsHandler(BaseTestCase):
         response = get_team(mock_event, None)
 
         # Assert Behaviour
-        expected_response = {
-            "statusCode": 200,
-            "body": {"message": [Fixtures.get_team_json(team_id)]},
-        }
-        self.assertEqual(response, expected_response)
+        expected_response = Lambda.format_response(
+            status_code=APIResponseCodes.OK, response_message=[Fixtures.get_team_json(team_id)]
+        )
+        self.assertDictEqual(response, expected_response)

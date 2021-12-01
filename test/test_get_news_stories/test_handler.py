@@ -3,6 +3,8 @@ from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
 
 from src.common.constants import NEWS_STORIES_TABLE_NAME, S3_BUCKET_NAME
+from src.common.enums.api_response_codes import APIResponseCodes
+from src.common.services.lambda_ import Lambda
 from src.get_news_stories.handler import get_news_stories
 
 
@@ -30,18 +32,18 @@ class TestGetMembersByTeamHandler(BaseTestCase):
         response = get_news_stories({"category": "all"}, None)
 
         # Assert Behaviour
-        expected_response = {
-            "statusCode": 200,
-            "body": {"message": [Fixtures.get_news_story_json(story_id)]},
-        }
-        self.assertEqual(response, expected_response)
+        expected_response = Lambda.format_response(
+            status_code=APIResponseCodes.OK,
+            response_message=[Fixtures.get_news_story_json(story_id)],
+        )
+        self.assertDictEqual(response, expected_response)
 
     def test_should_return_400_and_error_message_on_bad_request(self):
         response = get_news_stories({}, None)
 
         # Assert Behaviour
-        expected_response = {
-            "statusCode": 400,
-            "body": {"errorMessage": "Event processed contains invalid category"},
-        }
+        expected_response = Lambda.format_response(
+            status_code=APIResponseCodes.BAD_REQUEST,
+            error_message="Event processed contains invalid category",
+        )
         self.assertEqual(response, expected_response)

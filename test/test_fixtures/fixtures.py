@@ -40,7 +40,7 @@ class Fixtures:
         if manager_id is None:
             manager_id = str(uuid4())
         return {
-            "academy_player": None,
+            "id": manager_id,
             "details": {
                 "address": "killians-amazing-address",
                 "birthdate": "killians-amazing-birthdate",
@@ -58,14 +58,14 @@ class Fixtures:
                 "profile": None,
                 "updated_at": None,
             },
-            "id": manager_id,
             "manager": {
-                "achievements": [],
                 "favorite_formation": "killians-amazing-favorite_formation",
-                "loss_record": 0,
                 "win_record": 0,
+                "loss_record": 0,
+                "achievements": [],
             },
             "officer": None,
+            "academy_player": None,
             "player": None,
         }
 
@@ -74,7 +74,7 @@ class Fixtures:
         if player_id is None:
             player_id = str(uuid4())
         return {
-            "academy_player": None,
+            "id": player_id,
             "details": {
                 "address": "killians-amazing-address",
                 "birthdate": "killians-amazing-birthdate",
@@ -92,39 +92,39 @@ class Fixtures:
                 "profile": None,
                 "updated_at": None,
             },
-            "id": player_id,
             "manager": None,
             "officer": None,
+            "academy_player": None,
             "player": {
-                "achievements": [],
-                "all_time_appearances": 0,
-                "all_time_assists": 0,
-                "all_time_goals": 0,
                 "positions": [],
                 "season_appearances": 0,
                 "season_assists": 0,
                 "season_goals": 0,
+                "all_time_appearances": 0,
+                "all_time_assists": 0,
+                "all_time_goals": 0,
+                "achievements": [],
             },
         }
 
     @staticmethod
     def get_team_json(team_id):
         return {
+            "id": team_id,
+            "name": "killians-amazing-team-name",
+            "managers": [],
+            "players": [],
+            "training_times": ["killians-amazing-training_times"],
             "fixtures": [
                 {
+                    "home_team": "killians-amazing-home-team",
                     "away_team": "killians-amazing-away-team",
                     "competition": "killians-amazing-competition",
-                    "home_team": "killians-amazing-home-team",
-                    "kick_off_time": "killians-amazing-kick-off-time",
                     "location": "killians-amazing-location",
+                    "kick_off_time": "killians-amazing-kick-off-time",
                     "meeting_time": "killians-amazing-meeting-time",
                 }
             ],
-            "id": team_id,
-            "managers": [],
-            "name": "killians-amazing-team-name",
-            "players": [],
-            "training_times": ["killians-amazing-training_times"],
         }
 
     @staticmethod
