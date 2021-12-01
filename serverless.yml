@@ -32,6 +32,10 @@ functions:
         Action:
           - dynamodb:Scan
         Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
+    events:
+      - http:
+          path: member/getMembersByTeam
+          method: get
 
   getAllMembers:
     name: getAllMembers
@@ -46,6 +50,10 @@ functions:
         Action:
           - dynamodb:Scan
         Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
+    events:
+      - http:
+          path: member/getAllMembers
+          method: get
 
   getAllTeams:
     name: getAllTeams
@@ -62,6 +70,28 @@ functions:
         Resource:
           - "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
           - "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
+    events:
+      - http:
+          path: team/getAllTeams
+          method: get
+
+  getTeam:
+    name: getTeam
+    handler: src/get_team/handler.get_team
+    package:
+      patterns:
+        - src/get_team/**
+        - src/common/**
+        - src/__init__.py
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - dynamodb:Scan
+        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
+    events:
+      - http:
+          path: team/getTeam
+          method: get
 
   getNewsStories:
     name: getNewsStories
@@ -82,20 +112,10 @@ functions:
           - s3:GetObject
         Resource:
           - "arn:aws:s3:::cloudca/*"
-
-  getTeam:
-    name: getTeam
-    handler: src/get_team/handler.get_team
-    package:
-      patterns:
-        - src/get_team/**
-        - src/common/**
-        - src/__init__.py
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - dynamodb:Scan
-        Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
+    events:
+      - http:
+          path: news/getNewsStories
+          method: get
 
 plugins:
   - serverless-python-requirements

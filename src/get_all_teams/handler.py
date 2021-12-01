@@ -18,5 +18,4 @@ def get_all_teams(event, context):
     members_list = []
     for obj in response["Items"]:
         members_list.append(Team(**obj).dict())
-
     return Lambda.format_response(status_code=APIResponseCodes.OK, response_message=members_list)
