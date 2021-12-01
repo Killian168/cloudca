@@ -1,6 +1,6 @@
+from test.base_test_case import BaseTestCase
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
-from test.base_test_case import BaseTestCase
 
 from src.common.constants import MEMBERS_TABLE_NAME, TEAM_TABLE_NAME
 from src.common.services.lambda_ import Lambda
@@ -8,6 +8,10 @@ from src.get_members_by_team.handler import get_members_by_team
 
 
 class TestGetMembersByTeamHandler(BaseTestCase):
+    @classmethod
+    def setUpClass(cls, *args, **kwargs):
+        super().setUpClass(dynamo_tables=[MEMBERS_TABLE_NAME, TEAM_TABLE_NAME])
+
     def test_should_return_400_and_error_message_on_bad_request(self):
         # Set up
         mock_event = {"notTeamId": "Test"}

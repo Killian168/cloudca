@@ -1,15 +1,16 @@
+from test.base_test_case import BaseTestCase
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
-from test.base_test_case import BaseTestCase
-
-import boto3
-from moto import mock_dynamodb2, mock_s3
 
 from src.common.constants import NEWS_STORIES_TABLE_NAME, S3_BUCKET_NAME
 from src.get_news_stories.handler import get_news_stories
 
 
 class TestGetMembersByTeamHandler(BaseTestCase):
+    @classmethod
+    def setUpClass(cls, *args, **kwargs):
+        super().setUpClass(dynamo_tables=[NEWS_STORIES_TABLE_NAME], s3_buckets=[S3_BUCKET_NAME])
+
     def test_should_return_200_and_members_list(self):
         # Set up
         story_id = "killians-indecipherable-id"
