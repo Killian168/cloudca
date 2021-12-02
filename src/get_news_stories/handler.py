@@ -13,6 +13,7 @@ LOGGER = get_logger()
 
 
 def get_news_stories(event, context):
+    # Flag to return image or not
     category = event.get("category", None)
     LOGGER.debug(f"category value passed in event is: {category}")
 

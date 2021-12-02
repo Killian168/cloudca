@@ -21,6 +21,7 @@ functions:
   - ${file(./src/get_all_teams/function.yml)}
   - ${file(./src/get_team/function.yml)}
   - ${file(./src/get_news_stories/function.yml)}
+  - ${file(./src/submit_news_story/function.yml)}
 
 plugins:
   - serverless-python-requirements
