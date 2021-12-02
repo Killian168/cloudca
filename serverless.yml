@@ -40,5 +40,7 @@ custom:
 
 resources:
   Resources:
-    - ${file(./src/cloudformation/dynamodb-tables.yml)}
-    - ${file(./src/cloudformation/s3-buckets.yml)}
+    - ${file(./src/cloudformation/news-table.yml)}
+    - ${file(./src/cloudformation/team-table.yml)}
+    - ${file(./src/cloudformation/members-table.yml)}
+    - ${file(./src/cloudformation/cloudca-bucket.yml)}
