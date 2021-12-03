@@ -1,0 +1,19 @@
+getAllMembers:
+  name: getAllMembers
+  handler: src/routes/member/get_all_members/handler.get_all_members
+  package:
+    patterns:
+      - src/routes/__init__.py
+      - src/routes/member/__init__.py
+      - src/routes/member/get_all_members/**
+      - src/common/**
+      - src/__init__.py
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:Scan
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
+  events:
+    - http:
+        path: member/getAllMembers
+        method: get
