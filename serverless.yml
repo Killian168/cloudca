@@ -2,7 +2,7 @@ org: benny568
 app: cloudca
 service: cloudca
 
-frameworkVersion: '2.66.2'
+frameworkVersion: '2.68.0'
 
 package:
   individually: True
@@ -12,7 +12,7 @@ package:
 
 provider:
   name: aws
-  runtime: python3.8
+  runtime: python3.9
   lambdaHashingVersion: 20201221
 
 functions:
@@ -21,6 +21,7 @@ functions:
   - ${file(./src/get_all_teams/function.yml)}
   - ${file(./src/get_team/function.yml)}
   - ${file(./src/get_news_stories/function.yml)}
+  - ${file(./src/submit_news_story/function.yml)}
 
 plugins:
   - serverless-python-requirements
@@ -35,9 +36,11 @@ custom:
       - pre-commit
       - moto
     slim: true
-    pythonBin: /usr/local/opt/python@3.8/bin/python3 # Installed using `brew install python@3.8` on MacOs
+    pythonBin: /usr/local/opt/python@3.9/bin/python3 # Installed using `brew install python@3.9` on MacOs
 
 resources:
   Resources:
-    - ${file(./src/cloudformation/dynamodb-tables.yml)}
-    - ${file(./src/cloudformation/s3-buckets.yml)}
+    newsTable: ${file(./src/cloudformation/news-table.yml)}
+    teamTable: ${file(./src/cloudformation/team-table.yml)}
+    membersTable: ${file(./src/cloudformation/members-table.yml)}
+    cloudcaBucket: ${file(./src/cloudformation/cloudca-bucket.yml)}

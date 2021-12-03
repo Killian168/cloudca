@@ -9,6 +9,13 @@ class ScanningError(Exception):
         super().__init__(f"Error scanning {table_name}")
 
 
+class WriteError(Exception):
+    def __init__(self, table_name, item, response):
+        super().__init__(
+            f"Error putting item:{item}, into table {table_name}, responded with: {response}"
+        )
+
+
 class DynamoDB:
     def __init__(self, logger=None, dynamodb_resource=None):
         if logger is None:
@@ -20,12 +27,12 @@ class DynamoDB:
         self.dynamodb_resource = dynamodb_resource
 
     def scan_table(self, table_name, filter_expression=None):
-        teams_table = self.dynamodb_resource.Table(table_name)
+        table = self.dynamodb_resource.Table(table_name)
 
         if filter_expression:
-            response = teams_table.scan(FilterExpression=filter_expression)
+            response = table.scan(FilterExpression=filter_expression)
         else:
-            response = teams_table.scan()
+            response = table.scan()
 
         self.logger.debug(f"{table_name} Table scan responded with: {response}")
 
@@ -33,6 +40,12 @@ class DynamoDB:
             return response["Items"]
         else:
             raise ScanningError(table_name)
+
+    def put_item(self, table_name, item):
+        table = self.dynamodb_resource.Table(table_name)
+        response = table.put_item(Item=item)
+        if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
+            raise WriteError(table_name, item, response)
 
     # Note: This might be a good candidate for numba
     @staticmethod
