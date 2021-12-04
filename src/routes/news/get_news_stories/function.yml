@@ -1,0 +1,25 @@
+getNewsStories:
+  name: getNewsStories
+  handler: src/routes/news/get_news_stories/handler.get_news_stories
+  package:
+    patterns:
+      - src/routes/__init__.py
+      - src/routes/news/__init__.py
+      - src/routes/news/get_news_stories/**
+      - src/common/**
+      - src/__init__.py
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:Scan
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/News-Stories"
+    - Effect: "Allow"
+      Action:
+        - s3:GetObject
+      Resource:
+        - "arn:aws:s3:::cloudca/*"
+  events:
+    - http:
+        path: news/getNewsStories
+        method: get

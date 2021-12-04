@@ -129,8 +129,8 @@ dmypy.json
 
 # Serverless directories
 .serverless
-/src/get_members_by_team/wrap.py
-/src/get_members_by_team/lib/
+/src/routes/member/get_members_by_team/wrap.py
+/src/routes/member/get_members_by_team/lib/
 
 # IDE stuff
 .idea/
