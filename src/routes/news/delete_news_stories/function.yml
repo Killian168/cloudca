@@ -1,0 +1,25 @@
+deleteNewsStories:
+  name: deleteNewsStories
+  handler: src/routes/news/delete_news_stories/handler.delete_news_stories
+  package:
+    patterns:
+      - src/routes/__init__.py
+      - src/routes/news/__init__.py
+      - src/routes/news/delete_news_stories/**
+      - src/common/**
+      - src/__init__.py
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:DeleteItem
+      Resource:
+        - "arn:aws:dynamodb:${self:provider.region}:*:table/News-Stories"
+    - Effect: "Allow"
+      Action:
+        - s3:DeleteObject
+      Resource:
+        - "arn:aws:s3:::cloudca/news/thumbnails/*"
+  events:
+    - http:
+        path: news/deleteNewsStories
+        method: delete

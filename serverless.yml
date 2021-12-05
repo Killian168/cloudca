@@ -22,6 +22,7 @@ functions:
   - ${file(./src/routes/team/get_team/function.yml)}
   - ${file(./src/routes/news/get_news_stories/function.yml)}
   - ${file(./src/routes/news/submit_news_story/function.yml)}
+  - ${file(./src/routes/news/delete_news_stories/function.yml)}
 
 plugins:
   - serverless-python-requirements

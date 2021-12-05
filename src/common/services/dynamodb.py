@@ -16,6 +16,13 @@ class WriteError(Exception):
         )
 
 
+class DeletionError(Exception):
+    def __init__(self, table_name, id, response):
+        super().__init__(
+            f"Error deleting item with id:{id} from table {table_name}, responded with: {response}"
+        )
+
+
 class DynamoDB:
     def __init__(self, logger=None, dynamodb_resource=None):
         if logger is None:
@@ -46,6 +53,12 @@ class DynamoDB:
         response = table.put_item(Item=item)
         if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
             raise WriteError(table_name, item, response)
+
+    def delete_item(self, table_name, id):
+        table = self.dynamodb_resource.Table(table_name)
+        response = table.delete_item(Key={"id": id})
+        if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
+            raise DeletionError(table_name, id, response)
 
     # Note: This might be a good candidate for numba
     @staticmethod
