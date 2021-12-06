@@ -20,7 +20,7 @@ def get_team(event, context):
             status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
         )
 
-    dynamo = DynamoDB()
+    dynamo = DynamoDB(logger=LOGGER)
     response = dynamo.scan_table(
         table_name=TEAM_TABLE_NAME, filter_expression=Key("id").eq(team_id)
     )

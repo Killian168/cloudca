@@ -49,7 +49,7 @@ def submit_news_story(event, context):
     image_object = s3.Object(bucket_name=S3_BUCKET_NAME, key=news_story.thumbnail_key)
     image_object.put(Body=thumbnail)
 
-    dynamo = DynamoDB()
+    dynamo = DynamoDB(logger=LOGGER)
     dynamo.put_item(table_name=NEWS_STORIES_TABLE_NAME, item=news_story.dict())
 
     story = news_story.dict()

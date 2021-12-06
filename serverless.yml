@@ -36,6 +36,7 @@ custom:
       - black
       - pre-commit
       - moto
+      - coverage
     slim: true
     pythonBin: /usr/local/opt/python@3.9/bin/python3 # Installed using `brew install python@3.9` on MacOs
 
