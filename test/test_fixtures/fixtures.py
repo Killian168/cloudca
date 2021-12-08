@@ -7,28 +7,30 @@ class Fixtures:
     test_root = Path(__file__).parents[1]
 
     @staticmethod
-    def get_member_no_role_json(member_id=None):
-        if member_id is None:
-            member_id = str(uuid4())
+    def get_member_details_json():
+        return {
+            "address": "killians-amazing-address",
+            "birthdate": "killians-amazing-birthdate",
+            "email": "killians-amazing-email",
+            "family_name": "killians-amazing-family_name",
+            "gender": "killians-amazing-gender",
+            "given_name": "killians-amazing-given_name",
+            "locale": "killians-amazing-locale",
+            "middle_name": None,
+            "name": None,
+            "nick_name": None,
+            "phone_number": None,
+            "picture": None,
+            "preferred_username": "killians-amazing-preferred_username",
+            "profile": None,
+            "updated_at": None,
+        }
+
+    @staticmethod
+    def get_member_no_role_json(member_id):
         return {
             "id": member_id,
-            "details": {
-                "address": "killians-amazing-address",
-                "birthdate": "killians-amazing-birthdate",
-                "email": "killians-amazing-email",
-                "family_name": "killians-amazing-family_name",
-                "gender": "killians-amazing-gender",
-                "given_name": "killians-amazing-given_name",
-                "locale": "killians-amazing-locale",
-                "middle_name": None,
-                "name": None,
-                "nick_name": None,
-                "phone_number": None,
-                "picture": None,
-                "preferred_username": "killians-amazing-preferred_username",
-                "profile": None,
-                "updated_at": None,
-            },
+            "details": Fixtures.get_member_details_json(),
             "manager": None,
             "officer": None,
             "academy_player": None,
@@ -41,23 +43,7 @@ class Fixtures:
             manager_id = str(uuid4())
         return {
             "id": manager_id,
-            "details": {
-                "address": "killians-amazing-address",
-                "birthdate": "killians-amazing-birthdate",
-                "email": "killians-amazing-email",
-                "family_name": "killians-amazing-family_name",
-                "gender": "killians-amazing-gender",
-                "given_name": "killians-amazing-given_name",
-                "locale": "killians-amazing-locale",
-                "middle_name": None,
-                "name": None,
-                "nick_name": None,
-                "phone_number": None,
-                "picture": None,
-                "preferred_username": "killians-amazing-preferred_username",
-                "profile": None,
-                "updated_at": None,
-            },
+            "details": Fixtures.get_member_details_json(),
             "manager": {
                 "favorite_formation": "killians-amazing-favorite_formation",
                 "win_record": 0,
@@ -75,23 +61,7 @@ class Fixtures:
             player_id = str(uuid4())
         return {
             "id": player_id,
-            "details": {
-                "address": "killians-amazing-address",
-                "birthdate": "killians-amazing-birthdate",
-                "email": "killians-amazing-email",
-                "family_name": "killians-amazing-family_name",
-                "gender": "killians-amazing-gender",
-                "given_name": "killians-amazing-given_name",
-                "locale": "killians-amazing-locale",
-                "middle_name": None,
-                "name": None,
-                "nick_name": None,
-                "phone_number": None,
-                "picture": None,
-                "preferred_username": "killians-amazing-preferred_username",
-                "profile": None,
-                "updated_at": None,
-            },
+            "details": Fixtures.get_member_details_json(),
             "manager": None,
             "officer": None,
             "academy_player": None,

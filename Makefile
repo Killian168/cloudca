@@ -4,10 +4,10 @@ lint:
 	black ./
 
 tests:
-	python3 -m unittest discover ./test/
+	pytest -v test/
 
 coverage:
-	coverage run -m unittest discover ./test/
+	coverage run -m pytest -v test/
 	coverage report -m
 
 setup:
