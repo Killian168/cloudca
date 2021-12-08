@@ -11,8 +11,13 @@ submitNewsStory:
   iamRoleStatements:
     - Effect: "Allow"
       Action:
-        - dynamodb:Scan
+        - dynamodb:PutItem
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
+    - Effect: "Allow"
+      Action:
+        - s3:PutObject
+      Resource:
+        - "arn:aws:s3:::cloudca/news/*"
   events:
     - http:
         path: news/submitNewsStory

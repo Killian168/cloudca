@@ -1,6 +1,7 @@
 from typing import Optional
+from uuid import uuid4
 
-from pydantic import BaseModel, root_validator
+from pydantic import BaseModel, root_validator, validator
 
 from ..models.academy_player import AcademyPlayer
 from ..models.cognito_user import CognitoMember
@@ -12,18 +13,16 @@ from ..models.player import Player
 class NoMemberRole(Exception):
     """Custom error if a member doesn't have a defined role in the club."""
 
-    def __init__(self, message):
-        self.message = message
-        super.__init__(message)
+    pass
 
 
 class Member(BaseModel):
-    """Standard class of a Member stored in AWS Cognito.
+    """Standard class of a Member.
     This class initializes the standard attributes that a Member should have.
     """
 
     # Cognito member uuid
-    id: str
+    id: Optional[str]
 
     # Standard member attributes provided by cognito
     details: CognitoMember
@@ -44,5 +43,9 @@ class Member(BaseModel):
 
         # Check for role value in attributes passed in, if no role is found raise an exception.
         if any(value in values for value in roles):
-            raise NoMemberRole(message="Member does not have a role.")
+            raise NoMemberRole("Member does not have a role.")
         return values
+
+    @validator("id", pre=True, always=True)
+    def check_member_has_id(cls, value):
+        return value or str(uuid4())

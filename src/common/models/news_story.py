@@ -16,7 +16,7 @@ class NewsStory(BaseModel):
     thumbnail_key: Optional[str]
 
     @root_validator
-    def check_member_has_a_role(cls, values):
+    def create_id_and_thumbnail_key(cls, values):
         """Verify that the news story has an id and a thumbnail key"""
         if values["id"] is None:
             values["id"] = str(uuid4())
