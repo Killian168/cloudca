@@ -7,7 +7,7 @@ tests:
 	pytest -v test/
 
 coverage:
-	coverage run -m pytest -v test/
+	coverage run --omit="*/test*" -m pytest -v test/
 	coverage report -m
 
 setup:

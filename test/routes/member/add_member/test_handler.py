@@ -10,7 +10,7 @@ from src.common.services.lambda_ import Lambda
 from src.routes.member.add_member.handler import add_member
 
 
-class TestGetAllMembersHandler(BaseTestCase):
+class TestAddMembersHandler(BaseTestCase):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

@@ -28,8 +28,8 @@ def delete_news_stories(event, context):
         except DeletionError:
             ids_not_deleted.append(id)
 
-        s3 = boto3.resource("s3")
-        s3.Object(S3_BUCKET_NAME, f"{NEWS_THUMBNAILS_KEY}/{ids}.txt").delete()
+        s3 = boto3.client("s3")
+        s3.delete_object(Bucket=S3_BUCKET_NAME, Key=f"{NEWS_THUMBNAILS_KEY}/{id}.txt")
 
     if len(ids_not_deleted) > 0:
         return Lambda.format_response(
