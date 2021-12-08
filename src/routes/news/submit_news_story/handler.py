@@ -11,31 +11,21 @@ LOGGER = get_logger()
 
 
 def submit_news_story(event, context):
-    try:
-        story = event["story"]
-        LOGGER.debug(f"story value passed in event is: {story}")
-    except KeyError:
-        error_message = "Event processed does not have key `story`."
-        LOGGER.error(error_message)
-        return Lambda.format_response(
-            status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
-        )
+    story = event.get("story", None)
+    is_64_encoded = event.get("is64Encoded", None)
+    thumbnail = event.get("thumbnail", None)
 
-    try:
-        is_64_encoded = event["is64Encoded"]
-        LOGGER.debug(f"story value passed in event is: {is_64_encoded}")
-    except KeyError:
-        error_message = "Event processed does not have key `is64Encoded`."
-        LOGGER.error(error_message)
-        return Lambda.format_response(
-            status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
-        )
+    if story is None or is_64_encoded is None or thumbnail is None:
+        missing_keys = []
+        if story is None:
+            missing_keys.append("story")
+        if is_64_encoded is None:
+            missing_keys.append("is64Encoded")
+        if thumbnail is None:
+            missing_keys.append("thumbnail")
 
-    try:
-        thumbnail = event["thumbnail"]
-        LOGGER.debug(f"story value passed in event is: {thumbnail}")
-    except KeyError:
-        error_message = "Event processed does not have key `thumbnail`."
+        error_message = f"Event processed does not have keys: {missing_keys}"
+
         LOGGER.error(error_message)
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message

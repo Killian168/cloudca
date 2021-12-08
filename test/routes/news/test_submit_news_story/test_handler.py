@@ -2,6 +2,8 @@ from test.base_test_case import BaseTestCase
 from test.test_fixtures.fixtures import Fixtures
 from unittest.mock import Mock
 
+from parameterized import parameterized
+
 import src.common.models.news_story
 from src.common.constants import NEWS_STORIES_TABLE_NAME, S3_BUCKET_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
@@ -37,58 +39,52 @@ class TestSubmitNewsStoryHandler(BaseTestCase):
         )
         self.assertEqual(response, expected_response)
 
-    def test_should_return_400_on_missing_story(self):
-        # Set Up
-        test_event = {"thumbnail": Fixtures.get_base64_sample_pic(), "is64Encoded": True}
-
+    @parameterized.expand(
+        [
+            (
+                "Missing Story",
+                {"thumbnail": Fixtures.get_base64_sample_pic(), "is64Encoded": True},
+                "Event processed does not have keys: ['story']",
+            ),
+            (
+                "Empty Event",
+                {},
+                "Event processed does not have keys: ['story', 'is64Encoded', 'thumbnail']",
+            ),
+            (
+                "Empty Event",
+                {
+                    "story": {
+                        "category": ["killians-cool-category"],
+                        "title": "killians-terrible-title",
+                        "description": "killians-deceptive-description",
+                    },
+                    "thumbnail": Fixtures.get_base64_sample_pic(),
+                },
+                "Event processed does not have keys: ['is64Encoded']",
+            ),
+            (
+                "TeamId is None",
+                {
+                    "story": {
+                        "category": ["killians-cool-category"],
+                        "title": "killians-terrible-title",
+                        "description": "killians-deceptive-description",
+                    },
+                    "is64Encoded": True,
+                },
+                "Event processed does not have keys: ['thumbnail']",
+            ),
+        ]
+    )
+    def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
         # Call method
-        response = submit_news_story(test_event, None)
+        response = submit_news_story(event, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
-            status_code=APIResponseCodes.BAD_REQUEST,
-            error_message="Event processed does not have key `story`.",
+            status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
         )
-        self.assertEqual(response, expected_response)
-
-    def test_should_return_400_on_missing_is64Encoded(self):
-        # Set Up
-        test_event = {
-            "story": {
-                "category": ["killians-cool-category"],
-                "title": "killians-terrible-title",
-                "description": "killians-deceptive-description",
-            },
-            "thumbnail": Fixtures.get_base64_sample_pic(),
-        }
-
-        # Call method
-        response = submit_news_story(test_event, None)
-
-        # Assert Behaviour
-        expected_response = Lambda.format_response(
-            status_code=APIResponseCodes.BAD_REQUEST,
-            error_message="Event processed does not have key `is64Encoded`.",
-        )
-        self.assertEqual(response, expected_response)
-
-    def test_should_return_400_on_missing_thumbnail(self):
-        # Set Up
-        test_event = {
-            "story": {
-                "category": ["killians-cool-category"],
-                "title": "killians-terrible-title",
-                "description": "killians-deceptive-description",
-            },
-            "is64Encoded": True,
-        }
-
-        # Call method
-        response = submit_news_story(test_event, None)
-
-        # Assert Behaviour
-        expected_response = Lambda.format_response(
-            status_code=APIResponseCodes.BAD_REQUEST,
-            error_message="Event processed does not have key `thumbnail`.",
-        )
+        print(response)
+        print(expected_response)
         self.assertEqual(response, expected_response)

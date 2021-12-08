@@ -1,7 +1,9 @@
 from test.base_test_case import BaseTestCase
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
+from test.test_fixtures.fixtures import Fixtures
 
 from botocore.errorfactory import ClientError
+from parameterized import parameterized
 
 from src.common.constants import NEWS_STORIES_TABLE_NAME, NEWS_THUMBNAILS_KEY, S3_BUCKET_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
@@ -9,20 +11,43 @@ from src.common.services.lambda_ import Lambda
 from src.routes.news.delete_news_stories.handler import delete_news_stories
 
 
-class TestGetMembersByTeamHandler(BaseTestCase):
+class TestDeleteNewsStoriesHandler(BaseTestCase):
     @classmethod
     def setUpClass(cls, *args, **kwargs):
         super().setUpClass(dynamo_tables=[NEWS_STORIES_TABLE_NAME], s3_buckets=[S3_BUCKET_NAME])
 
-    def test_should_return_200_and_delete_one_item(self):
+    @parameterized.expand(
+        [
+            (
+                "Delete One Item",
+                ["test_id"],
+                "Successfully deleted news story with ids: ['test_id']",
+            ),
+            (
+                "Delete Two Items",
+                ["test_id_1", "test_id_2"],
+                "Successfully deleted news story with ids: ['test_id_1', 'test_id_2']",
+            ),
+            (
+                "Delete Three Items",
+                ["test_id_1", "test_id_2", "test_id_3"],
+                "Successfully deleted news story with ids: ['test_id_1', 'test_id_2', 'test_id_3']",
+            ),
+        ]
+    )
+    def test_should_return_200(self, name, ids, response_message):
         # Set up
-        test_story_id = "test_id"
-        test_key = f"{NEWS_THUMBNAILS_KEY}/{test_story_id}.txt"
-        ids = [test_story_id]
-        self.dynamodb_client.put_item(
-            TableName=NEWS_STORIES_TABLE_NAME,
-            Item=DynamoDbFixtures.get_news_story_dynamodb_json(test_story_id, test_key),
-        )
+        test_keys = [f"{NEWS_THUMBNAILS_KEY}/{id}.txt" for id in ids]
+
+        for i in range(len(ids)):
+            self.dynamodb_client.put_item(
+                TableName=NEWS_STORIES_TABLE_NAME,
+                Item=DynamoDbFixtures.get_news_story_dynamodb_json(ids[i], test_keys[i]),
+            )
+
+            self.s3_client.put_object(
+                Body=Fixtures.get_base64_sample_pic(), Bucket=S3_BUCKET_NAME, Key=test_keys[i]
+            )
 
         # Call method
         response = delete_news_stories({"ids": ids}, None)
@@ -30,81 +55,78 @@ class TestGetMembersByTeamHandler(BaseTestCase):
         # Assert behaviour
         expected_response = Lambda.format_response(
             status_code=APIResponseCodes.OK,
-            response_message=f"Successfully deleted news story with ids: {ids}",
+            response_message=response_message,
         )
         self.assertEqual(response, expected_response)
 
-        with self.assertRaises(KeyError):
-            _ = self.dynamodb_client.get_item(
-                TableName=NEWS_STORIES_TABLE_NAME,
-                Key={
-                    "id": {
-                        "S": ids[0],
-                    }
-                },
-            )["Item"]
+        for id in ids:
+            with self.assertRaises(KeyError):
+                _ = self.dynamodb_client.get_item(
+                    TableName=NEWS_STORIES_TABLE_NAME,
+                    Key={
+                        "id": {
+                            "S": id,
+                        }
+                    },
+                )["Item"]
 
-        with self.assertRaises(ClientError):
-            _ = self.s3_client.get_object(Bucket=S3_BUCKET_NAME, Key=test_key)
+        for test_key in test_keys:
+            with self.assertRaises(ClientError):
+                _ = self.s3_client.get_object(Bucket=S3_BUCKET_NAME, Key=test_key)
 
-    def test_should_return_200_and_delete_multiple_items(self):
+    def test_should_return_200_and_delete_no_items_from_invalid_ids(self):
         # Set up
-        test_story_id_1 = "test_id_1"
-        test_story_id_2 = "test_id_2"
-        test_key_1 = f"{NEWS_THUMBNAILS_KEY}/{test_story_id_1}.txt"
-        test_key_2 = f"{NEWS_THUMBNAILS_KEY}/{test_story_id_2}.txt"
-        ids = [test_story_id_1, test_story_id_2]
+        id = "id"
+        test_id = "Not an id"
+        test_key = f"{NEWS_THUMBNAILS_KEY}/{id}.txt"
+
         self.dynamodb_client.put_item(
             TableName=NEWS_STORIES_TABLE_NAME,
-            Item=DynamoDbFixtures.get_news_story_dynamodb_json(test_story_id_1, test_key_1),
+            Item=DynamoDbFixtures.get_news_story_dynamodb_json(id, test_key),
         )
-        self.dynamodb_client.put_item(
-            TableName=NEWS_STORIES_TABLE_NAME,
-            Item=DynamoDbFixtures.get_news_story_dynamodb_json(test_story_id_2, test_key_2),
+
+        self.s3_client.put_object(
+            Body=Fixtures.get_base64_sample_pic(), Bucket=S3_BUCKET_NAME, Key=test_key
         )
 
         # Call method
-        response = delete_news_stories({"ids": ids}, None)
+        response = delete_news_stories({"ids": [test_id]}, None)
 
         # Assert behaviour
         expected_response = Lambda.format_response(
             status_code=APIResponseCodes.OK,
-            response_message=f"Successfully deleted news story with ids: {ids}",
+            response_message=f"Successfully deleted news story with ids: {[test_id]}",
         )
         self.assertEqual(response, expected_response)
 
-        with self.assertRaises(KeyError):
-            _ = self.dynamodb_client.get_item(
-                TableName=NEWS_STORIES_TABLE_NAME,
-                Key={
-                    "id": {
-                        "S": test_story_id_1,
-                    }
-                },
-            )["Item"]
+        _ = self.dynamodb_client.get_item(
+            TableName=NEWS_STORIES_TABLE_NAME,
+            Key={
+                "id": {
+                    "S": id,
+                }
+            },
+        )["Item"]
 
-        with self.assertRaises(ClientError):
-            _ = self.s3_client.get_object(Bucket=S3_BUCKET_NAME, Key=test_key_1)
+        _ = self.s3_client.get_object(Bucket=S3_BUCKET_NAME, Key=test_key)
 
-        with self.assertRaises(KeyError):
-            _ = self.dynamodb_client.get_item(
-                TableName=NEWS_STORIES_TABLE_NAME,
-                Key={
-                    "id": {
-                        "S": test_story_id_2,
-                    }
-                },
-            )["Item"]
-
-        with self.assertRaises(ClientError):
-            _ = self.s3_client.get_object(Bucket=S3_BUCKET_NAME, Key=test_key_2)
-
-    def test_should_return_400_and_error_message_on_bad_request(self):
-        response = delete_news_stories({}, None)
+    @parameterized.expand(
+        [
+            (
+                "Invalid ids Key",
+                {"not correct ids": "Test"},
+                "Event processed contains invalid ids",
+            ),
+            ("Empty Event", {}, "Event processed contains invalid ids"),
+            ("ids is None", {"ids": None}, "Event processed contains invalid ids"),
+        ]
+    )
+    def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
+        response = delete_news_stories(event, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST,
-            error_message="Event processed contains invalid ids",
+            error_message=error_message,
         )
         self.assertEqual(response, expected_response)
