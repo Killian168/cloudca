@@ -12,7 +12,3 @@ updates:
     reviewers:
       - "benny568"
       - "Killian168"
-    labels:
-      - "pip"
-      - "dependencies"
-      - "automated"
