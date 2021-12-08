@@ -16,7 +16,7 @@ class TestGetAllMembersHandler(BaseTestCase):
 
     @classmethod
     def setUpClass(cls, *args, **kwargs):
-        super().setUpClass(dynamo_tables=[MEMBERS_TABLE_NAME], should_log=True)
+        super().setUpClass(dynamo_tables=[MEMBERS_TABLE_NAME])
 
     def test_should_return_200_and_members_list(self):
         # Set up
