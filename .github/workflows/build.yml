@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8'] # Using python 3.8 for serverless framework
+        python-version: ['3.9'] # Using python 3.9 for serverless framework
 
     steps:
     - uses: actions/checkout@v2
@@ -32,4 +32,4 @@ jobs:
       env:
         AWS_DEFAULT_REGION: "us-east-1"
       run: |
-        python3 -m unittest discover ./test/
+        make tests

@@ -21,29 +21,19 @@ class BaseTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls, dynamo_tables=None, s3_buckets=None, should_log=False):
+        cls.maxDiff = None
         cls.dynamo_tables = dynamo_tables
         cls.s3_buckets = s3_buckets
         cls.should_log = should_log
 
         cls._start_mocking()
         cls._set_up_boto3_clients()
-        if cls.dynamo_tables is not None:
-            cls._set_up_dynamodb_tables()
-
-        if cls.s3_buckets is not None:
-            cls._set_up_s3_buckets()
 
         if not cls.should_log:
             cls._disable_logging()
 
     @classmethod
     def tearDownClass(cls):
-        if cls.dynamo_tables is not None:
-            cls._delete_dynamodb_tables()
-
-        if cls.s3_buckets is not None:
-            cls._delete_s3_buckets()
-
         if not cls.should_log:
             # re-enables logging
             logging.disable(logging.NOTSET)
@@ -115,3 +105,17 @@ class BaseTestCase(TestCase):
 
         cls.s3_mock = None
         cls.dynamodb_mock = None
+
+    def setUp(self) -> None:
+        if self.dynamo_tables is not None:
+            self._set_up_dynamodb_tables()
+
+        if self.s3_buckets is not None:
+            self._set_up_s3_buckets()
+
+    def tearDown(self) -> None:
+        if self.dynamo_tables is not None:
+            self._delete_dynamodb_tables()
+
+        if self.s3_buckets is not None:
+            self._delete_s3_buckets()

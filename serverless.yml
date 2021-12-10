@@ -16,14 +16,15 @@ provider:
   lambdaHashingVersion: 20201221
 
 functions:
-  - ${file(./src/routes/member/get_members_by_team/function.yml)}
-  - ${file(./src/routes/member/get_all_members/function.yml)}
   - ${file(./src/routes/member/add_member/function.yml)}
-  - ${file(./src/routes/team/get_all_teams/function.yml)}
-  - ${file(./src/routes/team/get_team/function.yml)}
+  - ${file(./src/routes/member/get_all_members/function.yml)}
+  - ${file(./src/routes/member/get_members_by_team/function.yml)}
+  - ${file(./src/routes/member/update_member/function.yml)}
+  - ${file(./src/routes/news/delete_news_stories/function.yml)}
   - ${file(./src/routes/news/get_news_stories/function.yml)}
   - ${file(./src/routes/news/submit_news_story/function.yml)}
-  - ${file(./src/routes/news/delete_news_stories/function.yml)}
+  - ${file(./src/routes/team/get_all_teams/function.yml)}
+  - ${file(./src/routes/team/get_team/function.yml)}
 
 plugins:
   - serverless-python-requirements
