@@ -33,8 +33,7 @@ def delete_news_stories(event, context):
 
     if len(ids_not_deleted) > 0:
         return Lambda.format_response(
-            status_code=APIResponseCodes.PARTIAL_SUCCESS,
-            response_message={"ids": ids_not_deleted},
+            status_code=APIResponseCodes.PARTIAL_SUCCESS, response_message={"ids": ids_not_deleted}
         )
     else:
         return Lambda.format_response(
