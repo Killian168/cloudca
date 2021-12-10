@@ -1,5 +1,6 @@
 import boto3
-from boto3.dynamodb.conditions import Or
+from boto3.dynamodb.conditions import Key, Or
+from botocore.exceptions import ClientError
 
 from ..services.logger import get_logger
 
@@ -20,6 +21,13 @@ class DeletionError(Exception):
     def __init__(self, table_name, id, response):
         super().__init__(
             f"Error deleting item with id:{id} from table {table_name}, responded with: {response}"
+        )
+
+
+class UpdateError(Exception):
+    def __init__(self, table_name, id, response):
+        super().__init__(
+            f"Error updating item with id:{id} in table {table_name}, responded with: {response}"
         )
 
 
@@ -48,9 +56,12 @@ class DynamoDB:
         else:
             raise ScanningError(table_name)
 
-    def put_item(self, table_name, item):
+    def put_item(self, table_name, item, conditions=None):
         table = self.dynamodb_resource.Table(table_name)
-        response = table.put_item(Item=item)
+        if conditions is None:
+            response = table.put_item(Item=item)
+        else:
+            response = table.put_item(Item=item, ConditionExpression=conditions)
         if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
             raise WriteError(table_name, item, response)
 
@@ -59,6 +70,30 @@ class DynamoDB:
         response = table.delete_item(Key={"id": id})
         if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
             raise DeletionError(table_name, id, response)
+
+    def update_item(self, table_name, item):
+        table = self.dynamodb_resource.Table(table_name)
+        item_id = item["id"]
+        del item["id"]
+        update_expressions, update_values = DynamoDB._get_update_params(item)
+
+        response = None
+        try:
+            response = table.update_item(
+                Key={"id": item_id},
+                UpdateExpression=update_expressions,
+                ExpressionAttributeValues=dict(update_values),
+                ConditionExpression=Key("id").eq(item_id),
+                ReturnValues="ALL_NEW",
+            )
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
+                raise UpdateError(table_name, item_id, f"No item with id {item_id} found")
+
+        if response["Attributes"]:
+            return response
+        else:
+            raise UpdateError(table_name, item_id, response)
 
     # Note: This might be a good candidate for numba
     @staticmethod
@@ -77,3 +112,14 @@ class DynamoDB:
                 DynamoDB.create_or_filter_expression(left_arr),
                 DynamoDB.create_or_filter_expression(right_arr),
             )
+
+    @staticmethod
+    def _get_update_params(body):
+        update_expression = ["set "]
+        update_values = dict()
+
+        for key, val in body.items():
+            update_expression.append(f" {key} = :{key},")
+            update_values[f":{key}"] = val
+
+        return "".join(update_expression)[:-1], update_values

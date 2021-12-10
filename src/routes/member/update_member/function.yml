@@ -1,11 +1,11 @@
-addMembers:
-  name: addMembers
-  handler: src/routes/member/test_add_member/handler.test_add_member
+updateMembers:
+  name: updateMembers
+  handler: src/routes/member/update_member/handler.update_member
   package:
     patterns:
       - src/routes/__init__.py
       - src/routes/member/__init__.py
-      - src/routes/member/test_add_member/**
+      - src/routes/member/update_member/**
       - src/common/**
       - src/__init__.py
   iamRoleStatements:
@@ -15,5 +15,5 @@ addMembers:
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
   events:
     - http:
-        path: member/addMembers
+        path: member/updateMember
         method: post

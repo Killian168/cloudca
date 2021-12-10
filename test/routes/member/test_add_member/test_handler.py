@@ -25,7 +25,7 @@ class TestAddMembersHandler(BaseTestCase):
         # Call method
         with patch("src.common.models.member.uuid4") as mock_uuid4:
             mock_uuid4.return_value = test_uuid
-            response = add_member({"member": {"details": Fixtures.get_member_details_json()}}, None)
+            response = add_member({"Member": {"details": Fixtures.get_member_details_json()}}, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
@@ -40,23 +40,23 @@ class TestAddMembersHandler(BaseTestCase):
                 "Empty Event",
                 {},
                 APIResponseCodes.BAD_REQUEST,
-                "Event processed does not have key `member`.",
+                "Event processed does not have key `Member`.",
             ),
             (
                 "Member is None",
-                {"member": None},
+                {"Member": None},
                 APIResponseCodes.BAD_REQUEST,
-                "member can not be: None",
+                "Member can not be: None",
             ),
             (
                 "Missing Details",
-                {"member": {}},
+                {"Member": {}},
                 APIResponseCodes.BAD_REQUEST,
                 {"field required": ["details"]},
             ),
             (
                 "Invalid Member",
-                {"member": {"details": {}}},
+                {"Member": {"details": {}}},
                 APIResponseCodes.BAD_REQUEST,
                 {
                     "field required": [
