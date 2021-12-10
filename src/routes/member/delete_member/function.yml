@@ -1,19 +1,19 @@
-updateMember:
-  name: updateMember
-  handler: src/routes/member/update_member/handler.update_member
+deleteMember:
+  name: deleteMember
+  handler: src/routes/member/delete_member/handler.test_add_member
   package:
     patterns:
       - src/routes/__init__.py
       - src/routes/member/__init__.py
-      - src/routes/member/update_member/**
+      - src/routes/member/delete_member/**
       - src/common/**
       - src/__init__.py
   iamRoleStatements:
     - Effect: "Allow"
       Action:
-        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
   events:
     - http:
-        path: member/updateMember
-        method: put
+        path: member/deleteMember
+        method: delete

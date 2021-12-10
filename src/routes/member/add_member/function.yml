@@ -1,5 +1,5 @@
-addMembers:
-  name: addMembers
+addMember:
+  name: addMember
   handler: src/routes/member/test_add_member/handler.test_add_member
   package:
     patterns:
@@ -15,5 +15,5 @@ addMembers:
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Members"
   events:
     - http:
-        path: member/addMembers
+        path: member/addMember
         method: post
