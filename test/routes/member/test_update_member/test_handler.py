@@ -18,7 +18,7 @@ class TestUpdateMembersHandler(BaseTestCase):
 
     @classmethod
     def setUpClass(cls, *args, **kwargs):
-        super().setUpClass(dynamo_tables=[MEMBERS_TABLE_NAME], should_log=True)
+        super().setUpClass(dynamo_tables=[MEMBERS_TABLE_NAME])
 
     def test_should_return_200_and_update_member(self):
         # Set up

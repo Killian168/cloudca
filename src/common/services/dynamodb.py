@@ -77,7 +77,6 @@ class DynamoDB:
         del item["id"]
         update_expressions, update_values = DynamoDB._get_update_params(item)
 
-        response = None
         try:
             response = table.update_item(
                 Key={"id": item_id},
@@ -89,6 +88,8 @@ class DynamoDB:
         except ClientError as e:
             if e.response["Error"]["Code"] == "ConditionalCheckFailedException":
                 raise UpdateError(table_name, item_id, f"No item with id {item_id} found")
+            else:  # Re-raise exception if it's not of type ConditionalCheckFailedException
+                raise e
 
         if response["Attributes"]:
             return response
