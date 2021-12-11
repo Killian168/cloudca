@@ -2,7 +2,7 @@ from pydantic import ValidationError
 
 from src.common.constants import MEMBERS_TABLE_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
-from src.common.models.member import Member
+from src.common.models.member import Member, NoMemberRole
 from src.common.services.dynamodb import DynamoDB, UpdateError
 from src.common.services.lambda_ import Lambda
 from src.common.services.logger import get_logger
@@ -30,8 +30,13 @@ def update_member(event, context):
 
     try:
         member = Member(**member_details)
-    except ValidationError as e:
+    except NoMemberRole as e:
+        LOGGER.error(e)
+        return Lambda.format_response(
+            status_code=APIResponseCodes.BAD_REQUEST, error_message=str(e)
+        )
 
+    except ValidationError as e:
         error_message = {}
         for err in e.errors():
             if error_message.get(err["msg"], None) is None:
