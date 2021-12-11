@@ -49,7 +49,7 @@ class TestUpdateMembersHandler(BaseTestCase):
             (
                 "Member is None",
                 {"Member": None},
-                "Member can not be: None",
+                "Event processed does not have key `Member`.",
             ),
             (
                 "Missing Details",

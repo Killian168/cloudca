@@ -1,0 +1,24 @@
+updateNewsStory:
+  name: updateNewsStory
+  handler: src/routes/news/update_news_story/handler.update_news_story
+  package:
+    patterns:
+      - src/routes/__init__.py
+      - src/routes/news/__init__.py
+      - src/routes/news/update_news_story/**
+      - src/common/**
+      - src/__init__.py
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
+    - Effect: "Allow"
+      Action:
+        - s3:PutObject
+      Resource:
+        - "arn:aws:s3:::cloudca/news/*"
+  events:
+    - http:
+        path: news/updateNewsStory
+        method: post
