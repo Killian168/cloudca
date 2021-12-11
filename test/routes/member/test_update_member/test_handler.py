@@ -24,7 +24,9 @@ class TestUpdateMembersHandler(BaseTestCase):
         # Set up
         self.dynamodb_client.put_item(
             TableName=MEMBERS_TABLE_NAME,
-            Item=DynamoDbFixtures.get_member_no_role_dynamo_json(TestUpdateMembersHandler.TEST_UUID),
+            Item=DynamoDbFixtures.get_member_no_role_dynamo_json(
+                TestUpdateMembersHandler.TEST_UUID
+            ),
         )
 
         # Call method
@@ -51,16 +53,8 @@ class TestUpdateMembersHandler(BaseTestCase):
                 {"Member": None},
                 "Member can not be: None",
             ),
-            (
-                "Missing Details",
-                {"Member": {}},
-                "Member does not have a role."
-            ),
-            (
-                "Invalid Member",
-                {"Member": {"details": {}}},
-                "Member does not have a role."
-            ),
+            ("Missing Details", {"Member": {}}, "Member does not have a role."),
+            ("Invalid Member", {"Member": {"details": {}}}, "Member does not have a role."),
             (
                 "Should not put entry in table",
                 {"Member": Fixtures.get_manager_json(TEST_UUID)},

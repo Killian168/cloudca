@@ -31,7 +31,9 @@ def add_member(event, context):
     try:
         member = Member(**member_details)
     except NoMemberRole as e:
-        return Lambda.format_response(status_code=APIResponseCodes.BAD_REQUEST, error_message=str(e))
+        return Lambda.format_response(
+            status_code=APIResponseCodes.BAD_REQUEST, error_message=str(e)
+        )
 
     except ValidationError as e:
         error_message = {}

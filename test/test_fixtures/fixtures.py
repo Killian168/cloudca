@@ -135,5 +135,5 @@ class Fixtures:
                 "all_time_assists": 0,
                 "all_time_goals": 0,
                 "achievements": [],
-            }
+            },
         }
