@@ -9,11 +9,14 @@ from ..models.manager import Manager
 from ..models.officer import Officer
 from ..models.player import Player
 
+MEMBER_ROLES = {"player", "manager", "officer", "academy_player"}
+
 
 class NoMemberRole(Exception):
     """Custom error if a member doesn't have a defined role in the club."""
 
-    pass
+    def __init__(self):
+        super().__init__("Member does not have a role.")
 
 
 class Member(BaseModel):
@@ -33,19 +36,18 @@ class Member(BaseModel):
     academy_player: Optional[AcademyPlayer]
     player: Optional[Player]
 
-    @classmethod
-    @root_validator(pre=True)
+    @root_validator
     def check_member_has_a_role(cls, values):
-        """Verify that the member has a role in the club."""
-
-        # Define all possible roles for a member.
-        roles = {"player", "manager", "officer", "academy_player"}
+        """Verify that the member has a role in the club.
+        Check for role value in attributes passed in, if no role is found raise an exception."""
 
         # Check for role value in attributes passed in, if no role is found raise an exception.
-        if any(value in values for value in roles):
-            raise NoMemberRole("Member does not have a role.")
-        return values
+        for role in MEMBER_ROLES:
+            role_value = values.get(role, None)
+            if role_value is not None:
+                return values
+        raise NoMemberRole()
 
-    @validator("id", pre=True, always=True)
+    @validator("id", always=True)
     def check_member_has_id(cls, value):
         return value or str(uuid4())
