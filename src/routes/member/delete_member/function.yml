@@ -1,11 +1,11 @@
 deleteMember:
   name: deleteMember
-  handler: src/routes/member/delete_member/handler.test_add_member
+  handler: src/routes/member/test_delete_member/handler.test_add_member
   package:
     patterns:
       - src/routes/__init__.py
       - src/routes/member/__init__.py
-      - src/routes/member/delete_member/**
+      - src/routes/member/test_delete_member/**
       - src/common/**
       - src/__init__.py
   iamRoleStatements:

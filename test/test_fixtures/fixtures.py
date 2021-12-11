@@ -27,7 +27,9 @@ class Fixtures:
         }
 
     @staticmethod
-    def get_member_no_role_json(member_id):
+    def get_member_no_role_json(member_id=None):
+        if member_id is None:
+            member_id = str(uuid4())
         return {
             "id": member_id,
             "details": Fixtures.get_member_details_json(),
@@ -116,3 +118,22 @@ class Fixtures:
     @staticmethod
     def get_s3_object_json(bucket, key):
         return {"bucket": bucket, "key": key}
+
+    @classmethod
+    def get_member_no_id(cls):
+        return {
+            "details": Fixtures.get_member_details_json(),
+            "manager": None,
+            "officer": None,
+            "academy_player": None,
+            "player": {
+                "positions": [],
+                "season_appearances": 0,
+                "season_assists": 0,
+                "season_goals": 0,
+                "all_time_appearances": 0,
+                "all_time_assists": 0,
+                "all_time_goals": 0,
+                "achievements": [],
+            }
+        }

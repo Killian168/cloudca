@@ -18,7 +18,7 @@ class TestGetAllMembersHandler(BaseTestCase):
         member_id = "test_member_id"
         self.dynamodb_client.put_item(
             TableName=MEMBERS_TABLE_NAME,
-            Item=DynamoDbFixtures.get_member_no_role_dynamo_json(member_id),
+            Item=DynamoDbFixtures.get_player_dynamo_json(member_id),
         )
 
         # Call method
@@ -27,6 +27,6 @@ class TestGetAllMembersHandler(BaseTestCase):
         # Assert Behaviour
         expected_response = Lambda.format_response(
             status_code=APIResponseCodes.OK,
-            response_message=[Fixtures.get_member_no_role_json(member_id)],
+            response_message=[Fixtures.get_player_json(member_id)],
         )
         self.assertEqual(response, expected_response)

@@ -24,18 +24,18 @@ class TestUpdateMembersHandler(BaseTestCase):
         # Set up
         self.dynamodb_client.put_item(
             TableName=MEMBERS_TABLE_NAME,
-            Item=DynamoDbFixtures.get_manager_dynamo_json(TestUpdateMembersHandler.TEST_UUID),
+            Item=DynamoDbFixtures.get_member_no_role_dynamo_json(TestUpdateMembersHandler.TEST_UUID),
         )
 
         # Call method
         response = update_member(
-            {"Member": Fixtures.get_member_no_role_json(TestUpdateMembersHandler.TEST_UUID)}, None
+            {"Member": Fixtures.get_manager_json(TestUpdateMembersHandler.TEST_UUID)}, None
         )
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
             status_code=APIResponseCodes.OK,
-            response_message=Fixtures.get_member_no_role_json(TestUpdateMembersHandler.TEST_UUID),
+            response_message=Fixtures.get_manager_json(TestUpdateMembersHandler.TEST_UUID),
         )
         self.assertEqual(response, expected_response)
 
@@ -54,27 +54,16 @@ class TestUpdateMembersHandler(BaseTestCase):
             (
                 "Missing Details",
                 {"Member": {}},
-                {"field required": ["details"]},
+                "Member does not have a role."
             ),
             (
                 "Invalid Member",
                 {"Member": {"details": {}}},
-                {
-                    "field required": [
-                        {"details": "address"},
-                        {"details": "birthdate"},
-                        {"details": "email"},
-                        {"details": "family_name"},
-                        {"details": "gender"},
-                        {"details": "given_name"},
-                        {"details": "locale"},
-                        {"details": "preferred_username"},
-                    ]
-                },
+                "Member does not have a role."
             ),
             (
                 "Should not put entry in table",
-                {"Member": Fixtures.get_member_no_role_json(TEST_UUID)},
+                {"Member": Fixtures.get_manager_json(TEST_UUID)},
                 f"Error updating item with id:{TEST_UUID} in table Members, responded with: No item"
                 f" with id {TEST_UUID} found",
             ),

@@ -17,7 +17,7 @@ provider:
 
 functions:
   - ${file(./src/routes/member/add_member/function.yml)}
-  - ${file(./src/routes/member/delete_member/function.yml)}
+  - ${file(./src/routes/member/test_delete_member/function.yml)}
   - ${file(./src/routes/member/get_all_members/function.yml)}
   - ${file(./src/routes/member/get_members_by_team/function.yml)}
   - ${file(./src/routes/member/update_member/function.yml)}

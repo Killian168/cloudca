@@ -25,12 +25,12 @@ class TestAddMembersHandler(BaseTestCase):
         # Call method
         with patch("src.common.models.member.uuid4") as mock_uuid4:
             mock_uuid4.return_value = test_uuid
-            response = add_member({"Member": {"details": Fixtures.get_member_details_json()}}, None)
+            response = add_member({"Member": Fixtures.get_member_no_id()}, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
             status_code=APIResponseCodes.OK,
-            response_message=Fixtures.get_member_no_role_json(test_uuid),
+            response_message=Fixtures.get_player_json(test_uuid),
         )
         self.assertEqual(response, expected_response)
 
@@ -39,49 +39,37 @@ class TestAddMembersHandler(BaseTestCase):
             (
                 "Empty Event",
                 {},
-                APIResponseCodes.BAD_REQUEST,
                 "Event processed does not have key `Member`.",
             ),
             (
                 "Member is None",
                 {"Member": None},
-                APIResponseCodes.BAD_REQUEST,
                 "Member can not be: None",
             ),
             (
                 "Missing Details",
                 {"Member": {}},
-                APIResponseCodes.BAD_REQUEST,
-                {"field required": ["details"]},
+                "Member does not have a role.",
             ),
             (
                 "Invalid Member",
                 {"Member": {"details": {}}},
-                APIResponseCodes.BAD_REQUEST,
-                {
-                    "field required": [
-                        {"details": "address"},
-                        {"details": "birthdate"},
-                        {"details": "email"},
-                        {"details": "family_name"},
-                        {"details": "gender"},
-                        {"details": "given_name"},
-                        {"details": "locale"},
-                        {"details": "preferred_username"},
-                    ]
-                },
+                "Member does not have a role.",
+            ),
+            (
+                "No Role Member",
+                {"Member": Fixtures.get_member_no_role_json()},
+                "Member does not have a role.",
             ),
         ]
     )
-    def test_should_return_400_and_error_message_on_bad_request(
-        self, name, event, status_code, error_message
-    ):
+    def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
         # Call method
         response = add_member(event, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
-            status_code=status_code,
+            status_code=APIResponseCodes.BAD_REQUEST,
             error_message=error_message,
         )
         self.assertEqual(response, expected_response)
