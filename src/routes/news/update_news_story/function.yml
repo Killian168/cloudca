@@ -21,4 +21,4 @@ updateNewsStory:
   events:
     - http:
         path: news/updateNewsStory
-        method: post
+        method: patch

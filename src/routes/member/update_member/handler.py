@@ -11,7 +11,7 @@ LOGGER = get_logger()
 
 
 def update_member(event, context):
-    member_details = event.get('Member', None)
+    member_details = event.get("Member", None)
 
     if member_details is None:
         error_message = "Event processed does not have key `Member`."

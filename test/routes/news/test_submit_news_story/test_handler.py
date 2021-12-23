@@ -85,6 +85,4 @@ class TestSubmitNewsStoryHandler(BaseTestCase):
         expected_response = Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
         )
-        print(response)
-        print(expected_response)
         self.assertEqual(response, expected_response)

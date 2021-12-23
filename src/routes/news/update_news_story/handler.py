@@ -13,14 +13,15 @@ LOGGER = get_logger()
 def update_news_story(event, context):
     story = event.get("story", None)
     is_64_encoded = event.get("is64Encoded", None)
-    thumbnail = event.get("thumbnail", None)
 
     if story is None:
-        error_message = f"Event processed does not have keys: story"
+        error_message = "Event processed does not have keys: story"
         LOGGER.error(error_message)
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
         )
+
+    thumbnail = story.get("thumbnail", None)
 
     # Only the story metadata is changing, not the picture
     if thumbnail is None:
@@ -38,6 +39,13 @@ def update_news_story(event, context):
 
     # Picture needs to be updated as well
     else:
+        if is_64_encoded is None or is_64_encoded is False:
+            error_message = "is64Encoded is missing or false"
+            LOGGER.error(error_message)
+            return Lambda.format_response(
+                status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
+            )
+
         thumbnail = thumbnail.decode("utf-8")
 
         news_story = NewsStory(**story)

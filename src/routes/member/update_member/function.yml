@@ -16,4 +16,4 @@ updateMember:
   events:
     - http:
         path: member/updateMember
-        method: put
+        method: patch
