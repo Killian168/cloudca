@@ -11,21 +11,13 @@ LOGGER = get_logger()
 
 
 def update_member(event, context):
+    member_details = event.get("Member", None)
 
-    try:
-        member_details = event["Member"]
-        LOGGER.debug(f"Member value passed in event is: {member_details}")
-    except KeyError:
+    if member_details is None:
         error_message = "Event processed does not have key `Member`."
         LOGGER.error(error_message)
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
-        )
-
-    if member_details is None:
-        return Lambda.format_response(
-            status_code=APIResponseCodes.BAD_REQUEST,
-            error_message=f"Member can not be: {member_details}",
         )
 
     try:

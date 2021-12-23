@@ -100,10 +100,22 @@ class Fixtures:
         }
 
     @staticmethod
-    def get_base64_sample_pic():
-        image_path = Fixtures.test_root / "resources" / "test_image.jpeg"
+    def get_base64_sample_pic(image_name=None):
+        if image_name is None:
+            image_name = "test_image.jpeg"
+        image_path = Fixtures.test_root / "resources" / f"{image_name}"
         image = image_path.read_bytes()
         return b64encode(image)
+
+    @staticmethod
+    def get_dynamo_entry_news_story_json(story_id, thumbnail_key):
+        return {
+            "id": story_id,
+            "category": ["killians-cool-category"],
+            "title": "killians-terrible-title",
+            "description": "killians-different-description",
+            "thumbnail_key": thumbnail_key,
+        }
 
     @staticmethod
     def get_news_story_json(story_id):

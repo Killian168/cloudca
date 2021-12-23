@@ -51,7 +51,7 @@ class TestUpdateMembersHandler(BaseTestCase):
             (
                 "Member is None",
                 {"Member": None},
-                "Member can not be: None",
+                "Event processed does not have key `Member`.",
             ),
             ("Missing Details", {"Member": {}}, "Member does not have a role."),
             ("Invalid Member", {"Member": {"details": {}}}, "Member does not have a role."),
