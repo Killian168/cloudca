@@ -1,0 +1,19 @@
+addTeam:
+  name: addTeam
+  handler: src/routes/team/get_team/handler.get_team
+  package:
+    patterns:
+      - src/routes/__init__.py
+      - src/routes/team/__init__.py
+      - src/routes/team/get_team/**
+      - src/common/**
+      - src/__init__.py
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - dynamodb:PutItem
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/Teams"
+  events:
+    - http:
+        path: team/addTeam
+        method: post

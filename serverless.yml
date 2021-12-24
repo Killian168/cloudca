@@ -25,6 +25,7 @@ functions:
   - ${file(./src/routes/news/get_news_stories/function.yml)}
   - ${file(./src/routes/news/submit_news_story/function.yml)}
   - ${file(./src/routes/news/update_news_story/function.yml)}
+  - ${file(./src/routes/team/add_team/function.yml)}
   - ${file(./src/routes/team/get_all_teams/function.yml)}
   - ${file(./src/routes/team/get_team/function.yml)}
 

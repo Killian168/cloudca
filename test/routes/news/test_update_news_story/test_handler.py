@@ -128,3 +128,6 @@ class TestUpdateNewsStoryHandler(BaseTestCase):
             status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
         )
         self.assertEqual(response, expected_response)
+
+        response = self.dynamodb_client.scan(TableName=NEWS_STORIES_TABLE_NAME)
+        self.assertEqual(len(response["Items"]), 0)

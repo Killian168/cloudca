@@ -34,7 +34,6 @@ class Lambda:
     @staticmethod
     def format_response(status_code: APIResponseCodes, response_message=None, error_message=None):
         if error_message:
-            print(f"Inside format_response: {error_message=}")
             return Lambda._lambda_response_contract(
                 status_code=status_code.value, body={"errorMessage": error_message}
             )

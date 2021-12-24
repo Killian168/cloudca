@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Optional
+from uuid import uuid4
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 from ..models.fixture import Fixture
 
@@ -10,9 +11,13 @@ class Team(BaseModel):
     Holds custom attributes that are related to a Team in the Club.
     """
 
-    id: str
+    id: Optional[str]
     name: str
     managers: List[str] = []
     players: List[str] = []
     training_times: List[str] = []
     fixtures: List[Fixture] = []
+
+    @validator("id", always=True)
+    def check_member_has_id(cls, value):
+        return value or str(uuid4())

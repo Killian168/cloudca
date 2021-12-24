@@ -39,6 +39,17 @@ class TestSubmitNewsStoryHandler(BaseTestCase):
         )
         self.assertEqual(response, expected_response)
 
+        response = self.dynamodb_client.scan(
+            TableName=NEWS_STORIES_TABLE_NAME,
+            ExpressionAttributeValues={
+                ":id": {
+                    "S": test_id,
+                },
+            },
+            FilterExpression="id = :id",
+        )
+        self.assertEqual(len(response["Items"]), 1)
+
     @parameterized.expand(
         [
             (
@@ -86,3 +97,6 @@ class TestSubmitNewsStoryHandler(BaseTestCase):
             status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
         )
         self.assertEqual(response, expected_response)
+
+        response = self.dynamodb_client.scan(TableName=NEWS_STORIES_TABLE_NAME)
+        self.assertEqual(len(response["Items"]), 0)

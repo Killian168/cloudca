@@ -41,6 +41,17 @@ class TestUpdateMembersHandler(BaseTestCase):
         )
         self.assertEqual(response, expected_response)
 
+        response = self.dynamodb_client.scan(
+            TableName=MEMBERS_TABLE_NAME,
+            ExpressionAttributeValues={
+                ":id": {
+                    "S": TestUpdateMembersHandler.TEST_UUID,
+                },
+            },
+            FilterExpression="id = :id",
+        )
+        self.assertEqual(len(response["Items"]), 1)
+
     @parameterized.expand(
         [
             (
@@ -73,3 +84,6 @@ class TestUpdateMembersHandler(BaseTestCase):
             error_message=error_message,
         )
         self.assertEqual(response, expected_response)
+
+        response = self.dynamodb_client.scan(TableName=MEMBERS_TABLE_NAME)
+        self.assertEqual(len(response["Items"]), 0)

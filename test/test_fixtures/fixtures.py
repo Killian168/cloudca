@@ -80,7 +80,28 @@ class Fixtures:
         }
 
     @staticmethod
-    def get_team_json(team_id):
+    def get_team_no_id_json():
+        return {
+            "name": "killians-amazing-team-name",
+            "managers": [],
+            "players": [],
+            "training_times": ["killians-amazing-training_times"],
+            "fixtures": [
+                {
+                    "home_team": "killians-amazing-home-team",
+                    "away_team": "killians-amazing-away-team",
+                    "competition": "killians-amazing-competition",
+                    "location": "killians-amazing-location",
+                    "kick_off_time": "killians-amazing-kick-off-time",
+                    "meeting_time": "killians-amazing-meeting-time",
+                }
+            ],
+        }
+
+    @staticmethod
+    def get_team_json(team_id=None):
+        if team_id is None:
+            team_id = str(uuid4())
         return {
             "id": team_id,
             "name": "killians-amazing-team-name",
