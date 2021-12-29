@@ -1,4 +1,4 @@
-virtualenv==20.10.0
+virtualenv==20.11.2
 black==21.12b0
 pre-commit==2.16.0
 moto==2.2.19
