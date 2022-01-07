@@ -2,7 +2,7 @@ virtualenv==20.10.0
 black==21.12b0
 pre-commit==2.16.0
 moto==2.2.19
-boto3==1.20.26
+boto3==1.20.30
 python-json-logger==2.0.2
 pydantic==1.8.2
 coverage==6.2
