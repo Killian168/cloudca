@@ -15,6 +15,7 @@ jobs:
         uses: dependabot/fetch-metadata@v1.1.1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - uses: actions/checkout@v2
       - name: Check Build
         uses: ./.github/workflows/build.yml@main
       - name: Enable auto-merge for Dependabot PRs
