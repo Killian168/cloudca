@@ -28,6 +28,7 @@ functions:
   - ${file(./src/routes/team/add_team/function.yml)}
   - ${file(./src/routes/team/get_all_teams/function.yml)}
   - ${file(./src/routes/team/get_team/function.yml)}
+  - ${file(./src/routes/team/update_team/function.yml)}
 
 plugins:
   - serverless-python-requirements

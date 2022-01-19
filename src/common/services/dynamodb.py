@@ -41,6 +41,37 @@ class DynamoDB:
         self.logger = logger
         self.dynamodb_resource = dynamodb_resource
 
+    # Note: This might be a good candidate for numba
+    @staticmethod
+    def create_or_filter_expression(conditions):
+        if len(conditions) == 1 or len(conditions) == 2:
+            if len(conditions) == 1:
+                return conditions[0]
+            else:
+                return Or(conditions[0], conditions[1])
+
+        else:
+            middle_index = len(conditions) / 2
+            left_arr = conditions[:middle_index]
+            right_arr = conditions[middle_index + 1 :]  # noqa: E203
+            return Or(
+                DynamoDB.create_or_filter_expression(left_arr),
+                DynamoDB.create_or_filter_expression(right_arr),
+            )
+
+    @staticmethod
+    def _get_update_params(body):
+        update_expression = ["set "]
+        update_names = dict()
+        update_values = dict()
+
+        for index, (key, val) in enumerate(body.items()):
+            update_expression.append(f" #{key} = :{index}{key},")
+            update_values[f":{index}{key}"] = val
+            update_names[f"#{key}"] = key
+
+        return "".join(update_expression)[:-1], update_names, update_values
+
     def scan_table(self, table_name, filter_expression=None):
         table = self.dynamodb_resource.Table(table_name)
 
@@ -75,13 +106,14 @@ class DynamoDB:
         table = self.dynamodb_resource.Table(table_name)
         item_id = item["id"]
         del item["id"]
-        update_expressions, update_values = DynamoDB._get_update_params(item)
+        update_expressions, update_names, update_values = DynamoDB._get_update_params(item)
 
         try:
             response = table.update_item(
                 Key={"id": item_id},
                 UpdateExpression=update_expressions,
                 ExpressionAttributeValues=dict(update_values),
+                ExpressionAttributeNames=dict(update_names),
                 ConditionExpression=Key("id").eq(item_id),
                 ReturnValues="ALL_NEW",
             )
@@ -95,32 +127,3 @@ class DynamoDB:
             return response
         else:
             raise UpdateError(table_name, item_id, response)
-
-    # Note: This might be a good candidate for numba
-    @staticmethod
-    def create_or_filter_expression(conditions):
-        if len(conditions) == 1 or len(conditions) == 2:
-            if len(conditions) == 1:
-                return conditions[0]
-            else:
-                return Or(conditions[0], conditions[1])
-
-        else:
-            middle_index = len(conditions) / 2
-            left_arr = conditions[:middle_index]
-            right_arr = conditions[middle_index + 1 :]  # noqa: E203
-            return Or(
-                DynamoDB.create_or_filter_expression(left_arr),
-                DynamoDB.create_or_filter_expression(right_arr),
-            )
-
-    @staticmethod
-    def _get_update_params(body):
-        update_expression = ["set "]
-        update_values = dict()
-
-        for key, val in body.items():
-            update_expression.append(f" {key} = :{key},")
-            update_values[f":{key}"] = val
-
-        return "".join(update_expression)[:-1], update_values
