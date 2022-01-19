@@ -99,12 +99,14 @@ class Fixtures:
         }
 
     @staticmethod
-    def get_team_json(team_id=None):
+    def get_team_json(team_id=None, team_name=None):
         if team_id is None:
             team_id = str(uuid4())
+        if team_name is None:
+            team_name = "killians-amazing-team-name"
         return {
             "id": team_id,
-            "name": "killians-amazing-team-name",
+            "name": team_name,
             "managers": [],
             "players": [],
             "training_times": ["killians-amazing-training_times"],
