@@ -82,7 +82,7 @@ class DynamoDB:
 
         self.logger.debug(f"{table_name} Table scan responded with: {response}")
 
-        if response["Items"]:
+        if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
             return response["Items"]
         else:
             raise ScanningError(table_name)

@@ -1,4 +1,5 @@
 from test.base_test_case import BaseTestCase
+from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
 
@@ -31,7 +32,8 @@ class TestGetNewsStoriesHandler(BaseTestCase):
         )
 
         # Call method
-        response = get_news_stories({"Category": "all"}, None)
+        request = APIGatewayFixtures.get_api_event({"Category": "all"})
+        response = get_news_stories(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
@@ -57,7 +59,8 @@ class TestGetNewsStoriesHandler(BaseTestCase):
         ]
     )
     def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
-        response = get_news_stories(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        response = get_news_stories(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(

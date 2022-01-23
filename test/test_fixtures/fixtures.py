@@ -128,7 +128,7 @@ class Fixtures:
             image_name = "test_image.jpeg"
         image_path = Fixtures.test_root / "resources" / f"{image_name}"
         image = image_path.read_bytes()
-        return b64encode(image)
+        return str(b64encode(image))
 
     @staticmethod
     def get_dynamo_entry_news_story_json(story_id, thumbnail_key):
@@ -147,7 +147,7 @@ class Fixtures:
             "category": ["killians-cool-category"],
             "title": "killians-terrible-title",
             "description": "killians-deceptive-description",
-            "thumbnail": Fixtures.get_base64_sample_pic().decode("utf-8"),
+            "thumbnail": Fixtures.get_base64_sample_pic(),
         }
 
     @staticmethod

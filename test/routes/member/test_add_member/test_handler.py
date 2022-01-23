@@ -1,4 +1,5 @@
 from test.base_test_case import BaseTestCase
+from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.fixtures import Fixtures
 from unittest.mock import patch
 
@@ -25,7 +26,9 @@ class TestAddMembersHandler(BaseTestCase):
         # Call method
         with patch("src.common.models.member.uuid4") as mock_uuid4:
             mock_uuid4.return_value = test_uuid
-            response = add_member({"Member": Fixtures.get_member_no_id()}, None)
+            request_body = {"Member": Fixtures.get_member_no_id()}
+            request = APIGatewayFixtures.get_api_event(request_body)
+            response = add_member(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
@@ -49,27 +52,27 @@ class TestAddMembersHandler(BaseTestCase):
         [
             (
                 "Empty Event",
-                {},
+                APIGatewayFixtures.get_api_event({}),
                 "Event processed does not have key `Member`.",
             ),
             (
                 "Member is None",
-                {"Member": None},
+                APIGatewayFixtures.get_api_event({"Member": None}),
                 "Member can not be: None",
             ),
             (
                 "Missing Details",
-                {"Member": {}},
+                APIGatewayFixtures.get_api_event({"Member": {}}),
                 "Member does not have a role.",
             ),
             (
                 "Invalid Member",
-                {"Member": {"details": {}}},
+                APIGatewayFixtures.get_api_event({"Member": {"details": {}}}),
                 "Member does not have a role.",
             ),
             (
                 "No Role Member",
-                {"Member": Fixtures.get_member_no_role_json()},
+                APIGatewayFixtures.get_api_event({"Member": Fixtures.get_member_no_role_json()}),
                 "Member does not have a role.",
             ),
         ]

@@ -1,4 +1,5 @@
 from test.base_test_case import BaseTestCase
+from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
 
@@ -40,7 +41,8 @@ class TestGetMembersByTeamHandler(BaseTestCase):
         )
 
         # Call method
-        response = get_members_by_team(mock_event, None)
+        request = APIGatewayFixtures.get_api_event(mock_event)
+        response = get_members_by_team(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
@@ -57,14 +59,15 @@ class TestGetMembersByTeamHandler(BaseTestCase):
             ("Invalid TeamId Key", {"notTeamId": "Test"}, "TeamId can not be: None"),
             ("Empty Event", {}, "TeamId can not be: None"),
             ("TeamId is None", {"TeamId": None}, "TeamId can not be: None"),
-            ("Invalid TeamId", {"TeamId": "Not a Team"}, "Invalid TeamId: Not a Team"),
+            ("Invalid TeamId", {"TeamId": "Not a Team"}, "No members found for TeamId: Not a Team"),
         ]
     )
     def test_should_return_400_and_error_message_on_bad_request(
         self, name, mock_event, error_message
     ):
         # Call method
-        response = get_members_by_team(mock_event, None)
+        request = APIGatewayFixtures.get_api_event(mock_event)
+        response = get_members_by_team(request, None)
 
         # Assert behaviour
         expected_response = Lambda.format_response(

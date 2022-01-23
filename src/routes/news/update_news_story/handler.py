@@ -1,3 +1,5 @@
+import json
+
 import boto3
 
 from src.common.constants import NEWS_STORIES_TABLE_NAME, S3_BUCKET_NAME
@@ -11,8 +13,9 @@ LOGGER = get_logger()
 
 
 def update_news_story(event, context):
-    story = event.get("story", None)
-    is_64_encoded = event.get("is64Encoded", None)
+    body = json.loads(event.get("body", None))
+    story = body.get("story", None)
+    is_64_encoded = event.get("isBase64Encoded", None)
 
     if story is None:
         error_message = "Event processed does not have keys: story"
@@ -45,8 +48,6 @@ def update_news_story(event, context):
             return Lambda.format_response(
                 status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
             )
-
-        thumbnail = thumbnail.decode("utf-8")
 
         news_story = NewsStory(**story)
 
