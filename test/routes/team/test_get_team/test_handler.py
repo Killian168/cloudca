@@ -1,4 +1,5 @@
 from test.base_test_case import BaseTestCase
+from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
 
@@ -26,7 +27,8 @@ class TestGetTeamHandler(BaseTestCase):
         )
 
         # Call method
-        response = get_team(mock_event, None)
+        request = APIGatewayFixtures.get_api_event(mock_event)
+        response = get_team(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
@@ -44,7 +46,8 @@ class TestGetTeamHandler(BaseTestCase):
     )
     def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
         # Call method
-        response = get_team(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        response = get_team(request, None)
 
         # Assert behaviour
         expected_response = Lambda.format_response(

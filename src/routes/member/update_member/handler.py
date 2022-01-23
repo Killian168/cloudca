@@ -1,3 +1,5 @@
+import json
+
 from pydantic import ValidationError
 
 from src.common.constants import MEMBERS_TABLE_NAME
@@ -11,7 +13,8 @@ LOGGER = get_logger()
 
 
 def update_member(event, context):
-    member_details = event.get("Member", None)
+    body = json.loads(event.get("body"))
+    member_details = body.get("Member", None)
 
     if member_details is None:
         error_message = "Event processed does not have key `Member`."

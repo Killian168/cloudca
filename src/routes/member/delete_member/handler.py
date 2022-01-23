@@ -1,3 +1,5 @@
+import json
+
 from src.common.constants import MEMBERS_TABLE_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
 from src.common.services.dynamodb import DeletionError, DynamoDB
@@ -8,7 +10,9 @@ LOGGER = get_logger()
 
 
 def delete_member(event, context):
-    member_id = event.get("MemberId", None)
+    body = json.loads(event["body"])
+    member_id = body.get("MemberId", None)
+
     if member_id is None:
         error_message = f"MemberId can not be: {member_id}"
         LOGGER.error(error_message)

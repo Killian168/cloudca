@@ -1,3 +1,5 @@
+import json
+
 from pydantic import ValidationError
 
 from src.common.constants import MEMBERS_TABLE_NAME
@@ -11,10 +13,10 @@ LOGGER = get_logger()
 
 
 def add_member(event, context):
+    body = json.loads(event["body"])
 
     try:
-        member_details = event["Member"]
-        LOGGER.debug(f"Member value passed in event is: {member_details}")
+        member_details = body["Member"]
     except KeyError:
         error_message = "Event processed does not have key `Member`."
         LOGGER.error(error_message)
@@ -23,6 +25,7 @@ def add_member(event, context):
         )
 
     if member_details is None:
+        LOGGER.error(f"Invalid member value passed in: {member_details}")
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST,
             error_message=f"Member can not be: {member_details}",
@@ -31,10 +34,10 @@ def add_member(event, context):
     try:
         member = Member(**member_details)
     except NoMemberRole as e:
+        LOGGER.error(f"Invalid member value passed in: {member_details} with error: {e}")
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST, error_message=str(e)
         )
-
     except ValidationError as e:
         error_message = {}
         for err in e.errors():
