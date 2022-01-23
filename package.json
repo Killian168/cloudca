@@ -1,0 +1,10 @@
+{
+  "name": "cloudca",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "pytest -v test/"
+  },
+  "devDependencies": {
+    "serverless-python-requirements": "^5.3.0"
+  }
+}
