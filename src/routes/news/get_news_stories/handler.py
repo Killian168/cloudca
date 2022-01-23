@@ -1,3 +1,5 @@
+import json
+
 import boto3
 from boto3.dynamodb.conditions import Attr
 
@@ -13,8 +15,8 @@ LOGGER = get_logger()
 
 
 def get_news_stories(event, context):
-    # Flag to return image or not
-    category = event.get("Category", None)
+    body = json.loads(event.get("body", None))
+    category = body.get("Category", None)
     LOGGER.debug(f"Category value passed in event is: {category}")
 
     if not NewsCategories.has_value(category):
@@ -26,7 +28,7 @@ def get_news_stories(event, context):
 
     dynamo = DynamoDB(logger=LOGGER)
 
-    if category is NewsCategories.all.value:
+    if category == NewsCategories.all.value:
         response = dynamo.scan_table(table_name=NEWS_STORIES_TABLE_NAME)
     else:
         response = dynamo.scan_table(

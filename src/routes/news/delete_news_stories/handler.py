@@ -1,3 +1,5 @@
+import json
+
 import boto3
 
 from src.common.constants import NEWS_STORIES_TABLE_NAME, NEWS_THUMBNAILS_KEY, S3_BUCKET_NAME
@@ -10,8 +12,10 @@ LOGGER = get_logger()
 
 
 def delete_news_stories(event, context):
-    ids = event.get("ids", None)
+    body = json.loads(event.get("body", None))
+    ids = body.get("ids", None)
     LOGGER.debug(f"ids passed in event is: {ids}")
+
     if ids is None:
         error_message = "Event processed contains invalid ids"
         LOGGER.error(error_message)

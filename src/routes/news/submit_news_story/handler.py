@@ -1,3 +1,5 @@
+import json
+
 import boto3
 
 from src.common.constants import NEWS_STORIES_TABLE_NAME, S3_BUCKET_NAME
@@ -11,9 +13,11 @@ LOGGER = get_logger()
 
 
 def submit_news_story(event, context):
-    story = event.get("story", None)
+    body = json.loads(event.get("body", None))
+
+    story = body.get("story", None)
     is_64_encoded = event.get("is64Encoded", None)
-    thumbnail = event.get("thumbnail", None)
+    thumbnail = body.get("thumbnail", None)
 
     if story is None or is_64_encoded is None or thumbnail is None:
         missing_keys = []
@@ -30,8 +34,6 @@ def submit_news_story(event, context):
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
         )
-
-    thumbnail = thumbnail.decode("utf-8")
 
     news_story = NewsStory(**story)
 

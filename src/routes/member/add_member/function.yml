@@ -1,11 +1,11 @@
 addMember:
   name: addMember
-  handler: src/routes/member/test_add_member/handler.test_add_member
+  handler: src/routes/member/add_member/handler.add_member
   package:
     patterns:
       - src/routes/__init__.py
       - src/routes/member/__init__.py
-      - src/routes/member/test_add_member/**
+      - src/routes/member/add_member/**
       - src/common/**
       - src/__init__.py
   iamRoleStatements:

@@ -1,4 +1,5 @@
 from test.base_test_case import BaseTestCase
+from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.fixtures import Fixtures
 from unittest.mock import patch
 
@@ -22,7 +23,8 @@ class TestAddTeamHandler(BaseTestCase):
         # Call method
         with patch("src.common.models.team.uuid4") as mock_uuid4:
             mock_uuid4.return_value = test_uuid
-            response = add_team({"Team": Fixtures.get_team_no_id_json()}, None)
+            request = APIGatewayFixtures.get_api_event({"Team": Fixtures.get_team_no_id_json()})
+            response = add_team(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
@@ -63,7 +65,8 @@ class TestAddTeamHandler(BaseTestCase):
     )
     def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
         # Call method
-        response = add_team(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        response = add_team(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(

@@ -1,4 +1,5 @@
 from test.base_test_case import BaseTestCase
+from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
 
@@ -50,7 +51,8 @@ class TestDeleteNewsStoriesHandler(BaseTestCase):
             )
 
         # Call method
-        response = delete_news_stories({"ids": ids}, None)
+        request = APIGatewayFixtures.get_api_event({"ids": ids})
+        response = delete_news_stories(request, None)
 
         # Assert behaviour
         expected_response = Lambda.format_response(
@@ -76,13 +78,13 @@ class TestDeleteNewsStoriesHandler(BaseTestCase):
 
     def test_should_return_200_and_delete_no_items_from_invalid_ids(self):
         # Set up
-        id = "id"
+        team_id = "id"
         test_id = "Not an id"
-        test_key = f"{NEWS_THUMBNAILS_KEY}/{id}.txt"
+        test_key = f"{NEWS_THUMBNAILS_KEY}/{team_id}.txt"
 
         self.dynamodb_client.put_item(
             TableName=NEWS_STORIES_TABLE_NAME,
-            Item=DynamoDbFixtures.get_news_story_dynamodb_json(id, test_key),
+            Item=DynamoDbFixtures.get_news_story_dynamodb_json(team_id, test_key),
         )
 
         self.s3_client.put_object(
@@ -90,7 +92,8 @@ class TestDeleteNewsStoriesHandler(BaseTestCase):
         )
 
         # Call method
-        response = delete_news_stories({"ids": [test_id]}, None)
+        request = APIGatewayFixtures.get_api_event({"ids": [test_id]})
+        response = delete_news_stories(request, None)
 
         # Assert behaviour
         expected_response = Lambda.format_response(
@@ -103,7 +106,7 @@ class TestDeleteNewsStoriesHandler(BaseTestCase):
             TableName=NEWS_STORIES_TABLE_NAME,
             Key={
                 "id": {
-                    "S": id,
+                    "S": team_id,
                 }
             },
         )["Item"]
@@ -122,7 +125,8 @@ class TestDeleteNewsStoriesHandler(BaseTestCase):
         ]
     )
     def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
-        response = delete_news_stories(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        response = delete_news_stories(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(

@@ -1,4 +1,5 @@
 from test.base_test_case import BaseTestCase
+from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.fixtures import Fixtures
 from unittest.mock import Mock
 
@@ -27,11 +28,12 @@ class TestSubmitNewsStoryHandler(BaseTestCase):
                 "description": "killians-deceptive-description",
             },
             "thumbnail": Fixtures.get_base64_sample_pic(),
-            "is64Encoded": True,
         }
 
         # Call method
-        response = submit_news_story(test_event, None)
+        request = APIGatewayFixtures.get_api_event(test_event)
+        request["is64Encoded"] = True
+        response = submit_news_story(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
@@ -54,43 +56,37 @@ class TestSubmitNewsStoryHandler(BaseTestCase):
         [
             (
                 "Missing Story",
-                {"thumbnail": Fixtures.get_base64_sample_pic(), "is64Encoded": True},
+                {"thumbnail": Fixtures.get_base64_sample_pic()},
+                True,
                 "Event processed does not have keys: ['story']",
             ),
             (
                 "Empty Event",
                 {},
-                "Event processed does not have keys: ['story', 'is64Encoded', 'thumbnail']",
+                False,
+                "Event processed does not have keys: ['story', 'thumbnail']",
             ),
             (
-                "Empty Event",
+                "No Thumbnail",
                 {
                     "story": {
                         "category": ["killians-cool-category"],
                         "title": "killians-terrible-title",
                         "description": "killians-deceptive-description",
                     },
-                    "thumbnail": Fixtures.get_base64_sample_pic(),
                 },
-                "Event processed does not have keys: ['is64Encoded']",
-            ),
-            (
-                "TeamId is None",
-                {
-                    "story": {
-                        "category": ["killians-cool-category"],
-                        "title": "killians-terrible-title",
-                        "description": "killians-deceptive-description",
-                    },
-                    "is64Encoded": True,
-                },
+                True,
                 "Event processed does not have keys: ['thumbnail']",
             ),
         ]
     )
-    def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
+    def test_should_return_400_and_error_message_on_bad_request(
+        self, name, event, is_64_encoded, error_message
+    ):
         # Call method
-        response = submit_news_story(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        request["is64Encoded"] = is_64_encoded
+        response = submit_news_story(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(

@@ -1,4 +1,5 @@
 from test.base_test_case import BaseTestCase
+from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
 
@@ -24,7 +25,7 @@ class TestUpdateNewsStoryHandler(BaseTestCase):
             Item=DynamoDbFixtures.get_news_story_dynamodb_json(test_id, test_thumbnail_key),
         )
         self.s3_client.put_object(
-            Body=Fixtures.get_base64_sample_pic().decode("utf-8"),
+            Body=Fixtures.get_base64_sample_pic(),
             Bucket=S3_BUCKET_NAME,
             Key=test_thumbnail_key,
         )
@@ -38,7 +39,9 @@ class TestUpdateNewsStoryHandler(BaseTestCase):
                 "description": "killians-different-description",
             }
         }
-        response = update_news_story(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        request["isBase64Encoded"] = True
+        response = update_news_story(request, None)
 
         # Assert behaviour
         expected_response = Lambda.format_response(
@@ -62,7 +65,7 @@ class TestUpdateNewsStoryHandler(BaseTestCase):
             Item=DynamoDbFixtures.get_news_story_dynamodb_json(test_id, test_thumbnail_key),
         )
         self.s3_client.put_object(
-            Body=Fixtures.get_base64_sample_pic().decode("utf-8"),
+            Body=Fixtures.get_base64_sample_pic(),
             Bucket=S3_BUCKET_NAME,
             Key=test_thumbnail_key,
         )
@@ -75,10 +78,11 @@ class TestUpdateNewsStoryHandler(BaseTestCase):
                 "title": "killians-terrible-title",
                 "description": "killians-different-description",
                 "thumbnail": Fixtures.get_base64_sample_pic("test_image_1.png"),
-            },
-            "is64Encoded": True,
+            }
         }
-        response = update_news_story(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        request["isBase64Encoded"] = True
+        response = update_news_story(request, None)
 
         # Assert behaviour
         expected_response = Lambda.format_response(
@@ -88,7 +92,7 @@ class TestUpdateNewsStoryHandler(BaseTestCase):
                 "category": ["killians-cool-category"],
                 "title": "killians-terrible-title",
                 "description": "killians-different-description",
-                "thumbnail": Fixtures.get_base64_sample_pic("test_image_1.png").decode("utf-8"),
+                "thumbnail": Fixtures.get_base64_sample_pic("test_image_1.png"),
             },
         )
         self.assertEqual(response, expected_response)
@@ -97,31 +101,39 @@ class TestUpdateNewsStoryHandler(BaseTestCase):
         [
             (
                 "Missing Story",
-                {"thumbnail": Fixtures.get_base64_sample_pic(), "is64Encoded": True},
+                {"thumbnail": Fixtures.get_base64_sample_pic()},
+                True,
                 "Event processed does not have keys: story",
             ),
             (
                 "Empty Event",
                 {},
+                False,
                 "Event processed does not have keys: story",
             ),
             (
-                "Incorrect is64Encoded",
+                "Should be 64 encoded",
                 {
                     "story": {
+                        "id": "killians-indecipherable-id",
                         "category": ["killians-cool-category"],
                         "title": "killians-terrible-title",
-                        "description": "killians-deceptive-description",
-                        "thumbnail": Fixtures.get_base64_sample_pic(),
-                    },
+                        "description": "killians-different-description",
+                        "thumbnail": Fixtures.get_base64_sample_pic("test_image_1.png"),
+                    }
                 },
+                False,
                 "is64Encoded is missing or false",
             ),
         ]
     )
-    def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
+    def test_should_return_400_and_error_message_on_bad_request(
+        self, name, event, is_64_encoded, error_message
+    ):
         # Call method
-        response = update_news_story(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        request["isBase64Encoded"] = is_64_encoded
+        response = update_news_story(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(

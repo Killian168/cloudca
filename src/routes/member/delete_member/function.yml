@@ -1,6 +1,6 @@
 deleteMember:
   name: deleteMember
-  handler: src/routes/member/delete_member/handler.test_add_member
+  handler: src/routes/member/delete_member/handler.delete_member
   package:
     patterns:
       - src/routes/__init__.py

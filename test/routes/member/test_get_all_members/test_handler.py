@@ -1,4 +1,5 @@
 from test.base_test_case import BaseTestCase
+from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
 
@@ -22,7 +23,8 @@ class TestGetAllMembersHandler(BaseTestCase):
         )
 
         # Call method
-        response = get_all_members(None, None)
+        request = APIGatewayFixtures.get_api_event(None)
+        response = get_all_members(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
