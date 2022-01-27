@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x] # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        python-version: ['3.9'] # Using python 3.9 for serverless framework
 
     steps:
     - uses: actions/checkout@v2
@@ -29,8 +30,12 @@ jobs:
       run: npm test
     - name: Install Serverless Framework
       run: npm install -g serverless
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
     - name: Deploy to AWS
       run: serverless deploy --verbose
-    - name: Serverless Doctor
+    - name: Check for deprecations
       if: ${{ failure() }}
       run: serverless doctor
