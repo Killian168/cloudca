@@ -40,6 +40,10 @@ jobs:
         make tests
     - name: Install NPM Packages
       run: npm ci
+    - name: Print PATH
+      run: echo $PATH
+    - name: Print python bin
+      run: ls -a /usr/local/opt/python@3.9/
     - name: Install Serverless Framework
       run: npm install -g serverless
     - name: Deploy to AWS
