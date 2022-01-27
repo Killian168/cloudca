@@ -1,0 +1,10 @@
+{
+  "name": "cloudca",
+  "version": "0.0.1",
+  "description": "Cloud backend for club app built on AWS.",
+  "author": "Killian O'Dalaigh",
+  "devDependencies": {
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "serverless-python-requirements": "^5.3.0"
+  }
+}
