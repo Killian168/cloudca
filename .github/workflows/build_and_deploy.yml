@@ -32,4 +32,5 @@ jobs:
     - name: Deploy to AWS
       run: serverless deploy --verbose
     - name: Serverless Doctor
+      if: ${{ failure() }}
       run: serverless doctor
