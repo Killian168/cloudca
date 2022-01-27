@@ -1,8 +1,9 @@
 name: Build and Deploy Main
 
 on:
-push:
-    branches: [main]
+  push:
+    branches:
+      - main
 
 jobs:
   build:
