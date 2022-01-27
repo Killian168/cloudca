@@ -42,10 +42,10 @@ jobs:
       run: npm ci
     - name: Print PATH
       run: echo $PATH
-    - name: List Python bin
-      run: ls -a /opt/hostedtoolcache/Python/3.9.10/x64/bin/
+    - name: Copy Python3
+      run: cp -R /opt/hostedtoolcache/Python/3.9.10/x64/bin/python3 /usr/local/opt/python@3.9/bin/python3
     - name: Print python bin
-      run: export PATH="$PATH:/opt/hostedtoolcache/Python/3.9.10/x64/bin/python3"
+      run: ls -a usr/local/opt/python@3.9/bin/python3
     - name: Install Serverless Framework
       run: npm install -g serverless
     - name: Deploy to AWS
