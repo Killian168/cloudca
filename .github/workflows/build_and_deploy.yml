@@ -30,4 +30,4 @@ jobs:
     - name: Install Serverless Framework
       run: npm install -g serverless
     - name: Deploy to AWS
-      run: serverless deploy --verbose
+      run: sls deploy
