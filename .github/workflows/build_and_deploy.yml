@@ -5,23 +5,27 @@ push:
     branches: [main]
 
 jobs:
-build:
-    runs-on: ubuntu-latest
+  build:
 
+    runs-on: ubuntu-latest
     strategy:
-    matrix:
-        node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+      matrix:
+        node-version: [16.x] # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
     - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
+    - name: Set up Node ${{ matrix.python-version }}
+      uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+    - name: Install dependencies
+      run: npm ci
+    - name: Run Build
+      run: npm run build --if-present
+    - name: Run Tests
+      env:
+        AWS_DEFAULT_REGION: "us-east-1"
+      run: npm test
     - name: Install Serverless Framework
         run: npm install -g serverless
     - name: Deploy to AWS
