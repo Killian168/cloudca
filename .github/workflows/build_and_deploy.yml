@@ -30,4 +30,6 @@ jobs:
     - name: Install Serverless Framework
       run: npm install -g serverless
     - name: Deploy to AWS
-      run: sls deploy
+      run: serverless deploy --verbose
+    - name: Serverless Doctor
+      run: serverless doctor
