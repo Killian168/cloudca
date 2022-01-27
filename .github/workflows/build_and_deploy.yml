@@ -27,6 +27,6 @@ jobs:
         AWS_DEFAULT_REGION: "us-east-1"
       run: npm test
     - name: Install Serverless Framework
-        run: npm install -g serverless
+      run: npm install -g serverless
     - name: Deploy to AWS
-        run: serverless deploy --verbose
+      run: serverless deploy --verbose
