@@ -1,18 +1,8 @@
 import logging
-import os
 from unittest import TestCase
 
 import boto3
 from moto import mock_dynamodb2, mock_s3
-
-
-def set_up_aws_credentials():
-    """Mocked AWS Credentials for moto."""
-    os.environ["AWS_ACCESS_KEY_ID"] = "testing"
-    os.environ["AWS_SECRET_ACCESS_KEY"] = "testing"
-    os.environ["AWS_SECURITY_TOKEN"] = "testing"
-    os.environ["AWS_SESSION_TOKEN"] = "testing"
-    os.environ["AWS_DEFAULT_REGION"] = "us-west-2"
 
 
 class BaseTestCase(TestCase):
@@ -31,7 +21,6 @@ class BaseTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls, dynamo_tables=None, s3_buckets=None, should_log=False):
-        set_up_aws_credentials()
         cls.maxDiff = None
         cls.dynamo_tables = dynamo_tables
         cls.s3_buckets = s3_buckets
