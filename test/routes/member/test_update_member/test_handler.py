@@ -67,7 +67,22 @@ class TestUpdateMembersHandler(BaseTestCase):
                 "Event processed does not have key `Member`.",
             ),
             ("Missing Details", {"Member": {}}, "Member does not have a role."),
-            ("Invalid Member", {"Member": {"details": {}}}, "Member does not have a role."),
+            (
+                "Invalid Member",
+                {"Member": {"details": {}, "player": {}}},
+                {
+                    "field required": [
+                        {"details": "address"},
+                        {"details": "birthdate"},
+                        {"details": "email"},
+                        {"details": "family_name"},
+                        {"details": "gender"},
+                        {"details": "given_name"},
+                        {"details": "locale"},
+                        {"details": "preferred_username"},
+                    ]
+                },
+            ),
             (
                 "Should not put entry in table",
                 {"Member": Fixtures.get_manager_json(TEST_UUID)},

@@ -154,8 +154,8 @@ class Fixtures:
     def get_s3_object_json(bucket, key):
         return {"bucket": bucket, "key": key}
 
-    @classmethod
-    def get_member_no_id(cls):
+    @staticmethod
+    def get_member_no_id():
         return {
             "details": Fixtures.get_member_details_json(),
             "manager": None,

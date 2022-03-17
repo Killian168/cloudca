@@ -64,19 +64,20 @@ class TestDeleteMembersHandler(BaseTestCase):
         [
             (
                 "Empty Event",
-                APIGatewayFixtures.get_api_event({}),
+                {},
                 "MemberId can not be: None",
             ),
             (
                 "MemberId is None",
-                APIGatewayFixtures.get_api_event({"MemberId": None}),
+                {"MemberId": None},
                 "MemberId can not be: None",
             ),
         ]
     )
     def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
         # Call method
-        response = delete_member(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        response = delete_member(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(

@@ -14,6 +14,18 @@ class Lambda:
     KEY_64ENCODED = "isBase64Encoded"
 
     @staticmethod
+    def parse_validation_error(error):
+        error_message = {}
+        for err in error.errors():
+            if error_message.get(err["msg"], None) is None:
+                error_message[err["msg"]] = []
+            if len(err["loc"]) > 1:
+                error_message[err["msg"]].append(dict([err["loc"]]))
+            elif "id" not in err["loc"][0]:
+                error_message[err["msg"]].append(err["loc"][0])
+        return error_message
+
+    @staticmethod
     def _lambda_response_contract(
         status_code=None, headers=None, body=None, is_base_64_encoded=False
     ):

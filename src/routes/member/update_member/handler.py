@@ -30,17 +30,8 @@ def update_member(event, context):
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST, error_message=str(e)
         )
-
     except ValidationError as e:
-        error_message = {}
-        for err in e.errors():
-            if error_message.get(err["msg"], None) is None:
-                error_message[err["msg"]] = []
-            if len(err["loc"]) > 1:
-                error_message[err["msg"]].append(dict([err["loc"]]))
-            else:
-                error_message[err["msg"]].append(err["loc"][0])
-
+        error_message = Lambda.parse_validation_error(e)
         LOGGER.error(error_message)
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message

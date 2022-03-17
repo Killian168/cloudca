@@ -52,34 +52,46 @@ class TestAddMembersHandler(BaseTestCase):
         [
             (
                 "Empty Event",
-                APIGatewayFixtures.get_api_event({}),
-                "Event processed does not have key `Member`.",
+                {},
+                "Event processed does not have key `Member` or value passed in was: `None`",
             ),
             (
                 "Member is None",
-                APIGatewayFixtures.get_api_event({"Member": None}),
-                "Member can not be: None",
+                {"Member": None},
+                "Event processed does not have key `Member` or value passed in was: `None`",
             ),
             (
                 "Missing Details",
-                APIGatewayFixtures.get_api_event({"Member": {}}),
+                {"Member": {}},
                 "Member does not have a role.",
             ),
             (
                 "Invalid Member",
-                APIGatewayFixtures.get_api_event({"Member": {"details": {}}}),
-                "Member does not have a role.",
+                {"Member": {"details": {}, "player": {}}},
+                {
+                    "field required": [
+                        {"details": "address"},
+                        {"details": "birthdate"},
+                        {"details": "email"},
+                        {"details": "family_name"},
+                        {"details": "gender"},
+                        {"details": "given_name"},
+                        {"details": "locale"},
+                        {"details": "preferred_username"},
+                    ]
+                },
             ),
             (
                 "No Role Member",
-                APIGatewayFixtures.get_api_event({"Member": Fixtures.get_member_no_role_json()}),
+                {"Member": Fixtures.get_member_no_role_json()},
                 "Member does not have a role.",
             ),
         ]
     )
     def test_should_return_400_and_error_message_on_bad_request(self, name, event, error_message):
         # Call method
-        response = add_member(event, None)
+        request = APIGatewayFixtures.get_api_event(event)
+        response = add_member(request, None)
 
         # Assert Behaviour
         expected_response = Lambda.format_response(
