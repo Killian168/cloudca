@@ -96,6 +96,12 @@ class DynamoDB:
         if response["ResponseMetadata"]["HTTPStatusCode"] != 200:
             raise WriteError(table_name, item, response)
 
+    def batch_delete(self, table_name, ids):
+        table = self.dynamodb_resource.Table(table_name)
+        with table.batch_writer() as batch:
+            for item_id in ids:
+                batch.delete_item(Key={"id": item_id})
+
     def delete_item(self, table_name, id):
         table = self.dynamodb_resource.Table(table_name)
         response = table.delete_item(Key={"id": id})
