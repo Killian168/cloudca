@@ -29,7 +29,5 @@ jobs:
         pre-commit install
         pre-commit run -a
     - name: Run unit tests
-      env:
-        AWS_DEFAULT_REGION: "us-east-1"
       run: |
         make tests

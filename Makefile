@@ -1,6 +1,6 @@
 #!/bin/bash
 
-lint:
+format:
 	black ./
 
 tests:
