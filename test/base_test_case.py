@@ -2,7 +2,7 @@ import logging
 from unittest import TestCase
 
 import boto3
-from moto import mock_dynamodb2, mock_s3
+from moto import mock_dynamodb, mock_s3
 
 
 class BaseTestCase(TestCase):
@@ -94,7 +94,7 @@ class BaseTestCase(TestCase):
     @classmethod
     def _start_mocking(cls):
         cls.s3_mock = mock_s3()
-        cls.dynamodb_mock = mock_dynamodb2()
+        cls.dynamodb_mock = mock_dynamodb()
 
         cls.s3_mock.start()
         cls.dynamodb_mock.start()
