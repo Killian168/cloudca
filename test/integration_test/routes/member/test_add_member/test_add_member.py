@@ -1,5 +1,6 @@
-import requests
 from test.test_fixtures.fixtures import Fixtures
+
+import requests
 
 MEMBER_RESOURCE = "member"
 

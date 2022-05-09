@@ -1,4 +1,5 @@
 import os
+
 import pytest
 
 api_gateway_prefix = os.environ.get("API_GATEWAY_PREFIX")

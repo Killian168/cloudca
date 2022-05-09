@@ -1,7 +1,7 @@
-from test.unit_test.base_test_case import BaseTestCase
 from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
+from test.unit_test.base_test_case import BaseTestCase
 
 from parameterized import parameterized
 
