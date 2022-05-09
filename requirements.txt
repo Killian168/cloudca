@@ -8,3 +8,4 @@ pydantic==1.9.0
 coverage==6.3.2
 pytest==7.1.2
 parameterized==0.8.1
+requests==2.27.1

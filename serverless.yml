@@ -2,7 +2,7 @@ org: benny568
 app: cloudca
 service: cloudca
 
-frameworkVersion: '3.0.0'
+frameworkVersion: '3.16.0'
 
 package:
   individually: True
