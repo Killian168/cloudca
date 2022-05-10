@@ -33,7 +33,12 @@ functions:
 plugins:
   - serverless-python-requirements
   - serverless-iam-roles-per-function
+  - serverless-prune-plugin
 custom:
+  prune:
+    automatic: true
+    number: 3 # Number of previous build version to keep to rollback to
+
   pythonRequirements:
     noDeploy:
       - pytest
