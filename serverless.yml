@@ -38,7 +38,7 @@ plugins:
 custom:
   prune:
     automatic: true
-    number: 3 # Number of previous build version to keep to rollback to
+    number: 3 # Number of previous build version to keep for rollback
 
   pythonRequirements:
     noDeploy:
