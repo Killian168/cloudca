@@ -58,7 +58,7 @@ class Fixtures:
         }
 
     @staticmethod
-    def get_player_json(player_id=None):
+    def get_player_json(player_id=None, season_appearances=0):
         if player_id is None:
             player_id = str(uuid4())
         return {
@@ -69,7 +69,7 @@ class Fixtures:
             "academy_player": None,
             "player": {
                 "positions": [],
-                "season_appearances": 0,
+                "season_appearances": season_appearances,
                 "season_assists": 0,
                 "season_goals": 0,
                 "all_time_appearances": 0,

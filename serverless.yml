@@ -34,6 +34,7 @@ plugins:
   - serverless-python-requirements
   - serverless-iam-roles-per-function
   - serverless-prune-plugin
+
 custom:
   prune:
     automatic: true
