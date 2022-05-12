@@ -21,7 +21,6 @@ jobs:
       matrix:
         node-version: [ '14.19' ]
         python-version: [ '3.9' ] # Using python 3.9 for serverless framework
-      stages:
         stage: ['dev']
 
     steps:
@@ -48,7 +47,7 @@ jobs:
       - name: Install SLS Plugins and Deploy
         uses: serverless/github-action@v3.0.0
         with:
-          args: -c "npm install --also=dev && npm list -g && npm list && serverless deploy --stage=${{ matrix.stages.stage }} --verbose"
+          args: -c "npm install --also=dev && npm list -g && npm list && serverless deploy --stage=${{ matrix.stage }} --verbose"
           entrypoint: /bin/bash
 
       - name: Run integration tests
