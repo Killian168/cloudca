@@ -51,7 +51,7 @@ jobs:
         run: npm install
 
       - name: Deploy Lambda functions
-        run: sls deploy -stage dev
+        run: sls deploy
 
       - name: Run integration tests
         run: |
