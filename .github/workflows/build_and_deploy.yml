@@ -21,8 +21,6 @@ jobs:
       matrix:
         node-version: [ '14.19' ]
         python-version: [ '3.9' ] # Using python 3.9 for serverless framework
-        stages:
-          stage: ['dev']
 
     steps:
       - uses: actions/checkout@v2
