@@ -43,13 +43,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: npm ci
+      - name: Install Serverless Framework
+        run: npm install -g serverless
 
-      - name: Install SLS Plugins and Deploy
-        uses: serverless/github-action@v3.0.0
-        with:
-          args: -c "npm install --also=dev && npm list -g && npm list && serverless deploy --stage=${{ matrix.stages.stage }} --verbose"
-          entrypoint: /bin/bash
+      - name: Serverless AWS authentication
+        run: sls config credentials --provider aws --key ${{ secrets.AWS_KEY }} --secret ${{ secrets.AWS_SECRET }}
+
+      - name: Install NPM dependencies
+        run: npm install
+
+      - name: Deploy Lambda functions
+        run: sls deploy -stage dev
 
       - name: Run integration tests
         run: |
