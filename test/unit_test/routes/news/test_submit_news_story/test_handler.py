@@ -1,3 +1,4 @@
+import json
 from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.fixtures import Fixtures
 from test.unit_test.base_test_case import BaseTestCase
@@ -39,7 +40,9 @@ class TestSubmitNewsStoryHandler(BaseTestCase):
         expected_response = Lambda.format_response(
             status_code=APIResponseCodes.OK, response_message=Fixtures.get_news_story_json(test_id)
         )
-        self.assertEqual(response, expected_response)
+        expected_response["body"] = json.loads(expected_response["body"])
+        response["body"] = json.loads(response["body"])
+        self.assertDictEqual(response, expected_response)
 
         response = self.dynamodb_client.scan(
             TableName=NEWS_STORIES_TABLE_NAME,

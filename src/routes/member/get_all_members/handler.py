@@ -1,3 +1,5 @@
+import cattrs
+
 from src.common.constants import MEMBERS_TABLE_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
 from src.common.models.member import Member
@@ -14,6 +16,7 @@ def get_all_members(event, context):
 
     members_list = []
     for obj in items:
-        members_list.append(Member(**obj).dict())
+        member = cattrs.structure(obj, Member)
+        members_list.append(cattrs.unstructure(member))
 
     return Lambda.format_response(status_code=APIResponseCodes.OK, response_message=members_list)

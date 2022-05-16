@@ -1,3 +1,4 @@
+import json
 from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
@@ -37,6 +38,8 @@ class TestUpdateTeamHandler(BaseTestCase):
             status_code=APIResponseCodes.OK,
             response_message=Fixtures.get_team_json(TestUpdateTeamHandler.TEST_UUID, team_name),
         )
+        expected_response["body"] = json.loads(expected_response["body"])
+        response["body"] = json.loads(response["body"])
         self.assertEqual(response, expected_response)
 
         response = self.dynamodb_client.scan(
@@ -66,7 +69,7 @@ class TestUpdateTeamHandler(BaseTestCase):
             (
                 "Invalid Team",
                 {"Team": {}},
-                {"field required": ["name"]},
+                "Invalid input",
             ),
             (
                 "Should not put entry in table",

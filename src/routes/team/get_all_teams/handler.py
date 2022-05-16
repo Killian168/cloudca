@@ -1,3 +1,5 @@
+import cattrs
+
 from src.common.constants import TEAM_TABLE_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
 from src.common.models.team import Team
@@ -14,5 +16,6 @@ def get_all_teams(event, context):
 
     members_list = []
     for obj in items:
-        members_list.append(Team(**obj).dict())
+        team = cattrs.structure(obj, Team)
+        members_list.append(cattrs.unstructure(team))
     return Lambda.format_response(status_code=APIResponseCodes.OK, response_message=members_list)

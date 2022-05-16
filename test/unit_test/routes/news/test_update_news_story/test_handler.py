@@ -1,3 +1,4 @@
+import json
 from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
@@ -95,6 +96,8 @@ class TestUpdateNewsStoryHandler(BaseTestCase):
                 "thumbnail": Fixtures.get_base64_sample_pic("test_image_1.png"),
             },
         )
+        expected_response["body"] = json.loads(expected_response["body"])
+        response["body"] = json.loads(response["body"])
         self.assertEqual(response, expected_response)
 
     @parameterized.expand(

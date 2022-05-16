@@ -1,11 +1,12 @@
 from typing import List
 
-from pydantic import BaseModel
+import attrs
 
 from ..models.cognito_user import CognitoMember
 
 
-class AcademyPlayer(BaseModel):
+@attrs.define
+class AcademyPlayer:
     """Represents what an academy player is in the club.
     Holds custom attributes that are related to a Academy Player role in the Club.
     """

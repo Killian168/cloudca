@@ -1,3 +1,4 @@
+import json
 from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.fixtures import Fixtures
 from test.unit_test.base_test_case import BaseTestCase
@@ -35,6 +36,10 @@ class TestAddMembersHandler(BaseTestCase):
             status_code=APIResponseCodes.OK,
             response_message=Fixtures.get_player_json(test_uuid),
         )
+
+        # Convert to dicts for more reliable comparison
+        expected_response["body"] = json.loads(expected_response["body"])
+        response["body"] = json.loads(response["body"])
         self.assertEqual(response, expected_response)
 
         response = self.dynamodb_client.scan(
@@ -63,23 +68,12 @@ class TestAddMembersHandler(BaseTestCase):
             (
                 "Missing Details",
                 {"Member": {}},
-                "Member does not have a role.",
+                "Invalid input",
             ),
             (
                 "Invalid Member",
                 {"Member": {"details": {}, "player": {}}},
-                {
-                    "field required": [
-                        {"details": "address"},
-                        {"details": "birthdate"},
-                        {"details": "email"},
-                        {"details": "family_name"},
-                        {"details": "gender"},
-                        {"details": "given_name"},
-                        {"details": "locale"},
-                        {"details": "preferred_username"},
-                    ]
-                },
+                "Invalid input",
             ),
             (
                 "No Role Member",

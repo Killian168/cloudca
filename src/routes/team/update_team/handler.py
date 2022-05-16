@@ -1,6 +1,6 @@
 import json
 
-from pydantic import ValidationError
+import cattrs
 
 from src.common.constants import TEAM_TABLE_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
@@ -24,21 +24,22 @@ def update_team(event, context):
         )
 
     try:
-        team = Team(**team_details)
-    except ValidationError as e:
-        error_message = Lambda.parse_validation_error(e)
-
-        LOGGER.error(error_message)
+        team = cattrs.structure(team_details, Team)
+    except Exception as e:
+        # ToDo: Use cattrs.errors.ClassValidationError for catrs > 22.1.0
+        LOGGER.error(e)
         return Lambda.format_response(
-            status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
+            status_code=APIResponseCodes.BAD_REQUEST, error_message="Invalid input"
         )
 
     dynamodb = DynamoDB(logger=LOGGER)
     try:
-        dynamodb.update_item(table_name=TEAM_TABLE_NAME, item=team.dict())
+        dynamodb.update_item(table_name=TEAM_TABLE_NAME, item=cattrs.unstructure(team))
     except UpdateError as e:
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST, error_message=str(e)
         )
 
-    return Lambda.format_response(status_code=APIResponseCodes.OK, response_message=team.dict())
+    return Lambda.format_response(
+        status_code=APIResponseCodes.OK, response_message=cattrs.unstructure(team)
+    )
