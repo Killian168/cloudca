@@ -1,27 +1,27 @@
 from typing import List, Optional
 from uuid import uuid4
 
-from pydantic import BaseModel, root_validator
+import attrs
 
 from src.common.constants import NEWS_THUMBNAILS_KEY
 
 
-class NewsStory(BaseModel):
+@attrs.define(slots=True)
+class NewsStory:
     """Represents what a News Story is"""
 
-    id: Optional[str]
-    category: List[str]
-    title: str
-    description: str
-    thumbnail_key: Optional[str]
+    category: List[str] = attrs.field()
+    title: str = attrs.field()
+    description: str = attrs.field()
+    id: Optional[str] = attrs.field(default=None)
+    thumbnail_key: Optional[str] = attrs.field(default=None)
 
-    @root_validator
-    def create_id_and_thumbnail_key(cls, values):
-        """Verify that the news story has an id and a thumbnail key"""
-        if values["id"] is None:
-            values["id"] = str(uuid4())
+    @thumbnail_key.validator
+    def _create_thumbnail_key(self, attribute, value):
+        if not value:
+            self.thumbnail_key = f"{NEWS_THUMBNAILS_KEY}/{self.id}.txt"
 
-        if values["thumbnail_key"] is None:
-            values["thumbnail_key"] = f'{NEWS_THUMBNAILS_KEY}/{values["id"]}.txt'
-
-        return values
+    @id.validator
+    def _validate_id(self, attribute, value):
+        if not value:
+            self.id = str(uuid4())

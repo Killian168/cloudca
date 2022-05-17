@@ -1,3 +1,4 @@
+import json
 from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
@@ -31,4 +32,6 @@ class TestGetAllMembersHandler(BaseTestCase):
             status_code=APIResponseCodes.OK,
             response_message=[Fixtures.get_player_json(member_id)],
         )
+        expected_response["body"] = json.loads(expected_response["body"])
+        response["body"] = json.loads(response["body"])
         self.assertEqual(response, expected_response)

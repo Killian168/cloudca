@@ -1,6 +1,7 @@
 import json
 
 import boto3
+import cattrs
 from boto3.dynamodb.conditions import Attr
 
 from src.common.constants import NEWS_STORIES_TABLE_NAME, S3_BUCKET_NAME
@@ -36,13 +37,15 @@ def get_news_stories(event, context):
             filter_expression=Attr("Category").contains(category),
         )
 
-    news_story_objs = [NewsStory(**obj) for obj in response]
+    news_story_objs = []
+    for obj in response:
+        news_story_objs.append(cattrs.structure(obj, NewsStory))
 
     news_stories = []
     s3 = boto3.resource("s3")
 
     for news_story in news_story_objs:
-        story = news_story.dict()
+        story = cattrs.unstructure(news_story)
         thumbnail_uri = s3.Object(S3_BUCKET_NAME, news_story.thumbnail_key)
         thumbnail_base_64 = thumbnail_uri.get()["Body"].read().decode("utf-8")
         del story["thumbnail_key"]

@@ -1,3 +1,4 @@
+import json
 from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
@@ -30,5 +31,6 @@ class TestGetAllTeamsHandler(BaseTestCase):
         expected_response = Lambda.format_response(
             status_code=APIResponseCodes.OK, response_message=[Fixtures.get_team_json(team_id)]
         )
-        self.maxDiff = None
+        expected_response["body"] = json.loads(expected_response["body"])
+        response["body"] = json.loads(response["body"])
         self.assertEqual(response, expected_response)

@@ -1,5 +1,6 @@
 import json
 
+import cattrs
 from boto3.dynamodb.conditions import Key
 
 from src.common.constants import MEMBERS_TABLE_NAME, TEAM_TABLE_NAME
@@ -30,7 +31,7 @@ def get_members_by_team(event: dict, context):
     )
 
     if response:
-        team = Team(**response[0])
+        team = cattrs.structure(response[0], Team)
     else:
         return Lambda.format_response(
             status_code=APIResponseCodes.BAD_REQUEST,
@@ -45,5 +46,9 @@ def get_members_by_team(event: dict, context):
         filter_expression=dynamo.create_or_filter_expression(conditions),
     )
 
-    members_list = [Member(**obj).dict() for obj in response]
+    members_list = []
+    for obj in response:
+        member = cattrs.structure(obj, Member)
+        members_list.append(cattrs.unstructure(member))
+
     return Lambda.format_response(status_code=APIResponseCodes.OK, response_message=members_list)

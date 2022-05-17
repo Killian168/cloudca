@@ -1,6 +1,7 @@
 import json
 
 import boto3
+import cattrs
 
 from src.common.constants import NEWS_STORIES_TABLE_NAME, S3_BUCKET_NAME
 from src.common.enums.api_response_codes import APIResponseCodes
@@ -28,11 +29,13 @@ def update_news_story(event, context):
 
     # Only the story metadata is changing, not the picture
     if thumbnail is None:
-        news_story = NewsStory(**story)
+        news_story = cattrs.structure(story, NewsStory)
 
         dynamodb = DynamoDB(logger=LOGGER)
         try:
-            dynamodb.update_item(table_name=NEWS_STORIES_TABLE_NAME, item=news_story.dict())
+            dynamodb.update_item(
+                table_name=NEWS_STORIES_TABLE_NAME, item=cattrs.unstructure(news_story)
+            )
         except UpdateError as e:
             return Lambda.format_response(
                 status_code=APIResponseCodes.BAD_REQUEST, error_message=str(e)
@@ -49,7 +52,7 @@ def update_news_story(event, context):
                 status_code=APIResponseCodes.BAD_REQUEST, error_message=error_message
             )
 
-        news_story = NewsStory(**story)
+        news_story = cattrs.structure(story, NewsStory)
 
         s3 = boto3.resource("s3")
         image_object = s3.Object(bucket_name=S3_BUCKET_NAME, key=news_story.thumbnail_key)
@@ -57,13 +60,15 @@ def update_news_story(event, context):
 
         dynamodb = DynamoDB(logger=LOGGER)
         try:
-            dynamodb.update_item(table_name=NEWS_STORIES_TABLE_NAME, item=news_story.dict())
+            dynamodb.update_item(
+                table_name=NEWS_STORIES_TABLE_NAME, item=cattrs.unstructure(news_story)
+            )
         except UpdateError as e:
             return Lambda.format_response(
                 status_code=APIResponseCodes.BAD_REQUEST, error_message=str(e)
             )
 
-        story = news_story.dict()
+        story = cattrs.unstructure(news_story)
         del story["thumbnail_key"]
         story.update({"thumbnail": thumbnail})
 

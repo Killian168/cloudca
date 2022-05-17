@@ -1,3 +1,4 @@
+import json
 from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
@@ -52,6 +53,8 @@ class TestGetMembersByTeamHandler(BaseTestCase):
                 Fixtures.get_player_json(player_id),
             ],
         )
+        expected_response["body"] = json.loads(expected_response["body"])
+        response["body"] = json.loads(response["body"])
         self.assertDictEqual(response, expected_response)
 
     @parameterized.expand(

@@ -1,3 +1,4 @@
+import json
 from test.test_fixtures.api_gateway_fixtures import APIGatewayFixtures
 from test.test_fixtures.dynamo_fixtures import DynamoDbFixtures
 from test.test_fixtures.fixtures import Fixtures
@@ -41,7 +42,9 @@ class TestUpdateMembersHandler(BaseTestCase):
             status_code=APIResponseCodes.OK,
             response_message=Fixtures.get_manager_json(TestUpdateMembersHandler.TEST_UUID),
         )
-        self.assertEqual(response, expected_response)
+        expected_response["body"] = json.loads(expected_response["body"])
+        response["body"] = json.loads(response["body"])
+        self.assertEqual(expected_response, response)
 
         response = self.dynamodb_client.scan(
             TableName=MEMBERS_TABLE_NAME,
@@ -66,22 +69,11 @@ class TestUpdateMembersHandler(BaseTestCase):
                 {"Member": None},
                 "Event processed does not have key `Member`.",
             ),
-            ("Missing Details", {"Member": {}}, "Member does not have a role."),
+            ("Missing Details", {"Member": {}}, "Invalid input"),
             (
                 "Invalid Member",
                 {"Member": {"details": {}, "player": {}}},
-                {
-                    "field required": [
-                        {"details": "address"},
-                        {"details": "birthdate"},
-                        {"details": "email"},
-                        {"details": "family_name"},
-                        {"details": "gender"},
-                        {"details": "given_name"},
-                        {"details": "locale"},
-                        {"details": "preferred_username"},
-                    ]
-                },
+                "Invalid input",
             ),
             (
                 "Should not put entry in table",

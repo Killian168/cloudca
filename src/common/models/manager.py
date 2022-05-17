@@ -1,9 +1,10 @@
 from typing import List
 
-from pydantic import BaseModel
+import attrs
 
 
-class Manager(BaseModel):
+@attrs.define
+class Manager:
     """Represents what a manager is in the club.
     Holds custom attributes that are related to a Manger role in the Club.
     """
