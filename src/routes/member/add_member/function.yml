@@ -4,17 +4,10 @@ addMember:
   package:
     patterns:
       - src/__init__.py
+      - src/common/**
       - src/routes/__init__.py
       - src/routes/member/__init__.py
-      - src/routes/member/add_member/__init__.py
-      - src/routes/member/add_member/handler.py
-      - src/common/__init__.py
-      - src/common/constants.py
-      - src/common/enums/api_response_codes.py
-      - src/common/models/member.py
-      - src/common/services/dynamodb.py
-      - src/common/services/lambda_.py
-      - src/common/services/logger.py
+      - src/routes/member/add_member/**
 
   iamRoleStatements:
     - Effect: "Allow"
