@@ -3,7 +3,7 @@ from typing import List
 import attrs
 
 
-@attrs.define
+@attrs.define(slots=True)
 class Player:
     """Represents what a player is in the club.
     Holds custom attributes that are related to a Player role in the Club.

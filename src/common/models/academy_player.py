@@ -5,7 +5,7 @@ import attrs
 from ..models.cognito_user import CognitoMember
 
 
-@attrs.define
+@attrs.define(slots=True)
 class AcademyPlayer:
     """Represents what an academy player is in the club.
     Holds custom attributes that are related to a Academy Player role in the Club.
